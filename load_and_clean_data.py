@@ -87,14 +87,14 @@ def training_data(pre_clean_training, clean_training):
     y = clean_training.loc[common_idx, "sentiment"]
 
     #Podział danych
-    X_text_train, X_text_test, y_train, y_test = train_test_split(
+    (X_text_train, X_text_test, X_custom_train, X_custom_test,y_train, y_test) = train_test_split(
         texts, y, test_size=0.2, random_state=42, stratify=y)
     
     #Standaryzacja cech numerycznych
     scaler = StandardScaler()
 
-    X_custom_train = scaler.fit_transform(X_custom.loc[X_text_train.index])
-    X_custom_test = scaler.transform(X_custom.loc[X_text_test.index])
+    X_custom_train = scaler.fit_transform(X_custom_train)
+    X_custom_test = scaler.transform(X_custom_test)
 
     return (X_text_train, X_text_test, 
             X_custom_train, X_custom_test, 

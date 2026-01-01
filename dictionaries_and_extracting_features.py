@@ -92,7 +92,7 @@ def extract_features(text):
 
     for i, w in enumerate(words):
         if w in negation_words:
-            for j in range(1, min(4, len(words)-i)):
+            for j in range(1, min(5, len(words)-i)):
                 next_word = words[i+j]
 
                 if next_word in positive_words:
