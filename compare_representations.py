@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import hstack, csr_matrix
 from sentence_transformers import SentenceTransformer
+from xgboost import XGBClassifier
 
 from load_and_clean_data import training_data
 from train_with_grid_and_custom_features import train_with_grid_and_custom_features, plot_learning_curve
@@ -70,6 +71,7 @@ def comparing_representations(clean_training):
     best_estimator = None
     best_rep = None
     plot_data = []
+    best_f1_per_rep = {}
     for representation, model_dict in all_results_imdb.items():
         for model, results in model_dict.items():
             f1 = results["test"]["f1"]
@@ -80,19 +82,24 @@ def comparing_representations(clean_training):
                 best_rep = representation
                 best_model_name = model
             
-            plot_data.append({
-                'Representation': representation,
-                'Model': model,  
-                'F1': f1
-        })
+            if representation not in best_f1_per_rep:
+                best_f1_per_rep[representation] = f1
+            else:
+                best_f1_per_rep[representation] = max(best_f1_per_rep[representation], f1)
+    
+    X_for_learning_curve = data[best_rep][0]
 
-    plot_learning_curve(best_estimator, data[best_rep][0], y_train, f"Learning curve - {best_model_name}")
+    if isinstance(best_estimator, XGBClassifier):
+        if hasattr(data[best_rep][0], "toarray"):
+            X_for_learning_curve = X_for_learning_curve.toarray()
+
+    plot_learning_curve(best_estimator,X_for_learning_curve , y_train, f"Learning curve - {best_model_name}")
 
     plt.figure(figsize=(12,6))
 
-    df_plot = pd.DataFrame(plot_data)
-    df_plot.set_index('Representation')["F1"].plot(kind='bar', figsize=(12,6))
-    plt.title(f"Porównanie metryk testowych — IMDB")
+    df_plot = pd.DataFrame.from_dict(best_f1_per_rep, orient = "index", columns =["F1"])
+    df_plot.plot(kind="bar", legend=False)
+    plt.title(f"Best test F1 per representation")
     plt.ylabel("Wartosc metryki")
     plt.ylim(0,1) #oś y w przedziale od 0,1
     plt.xticks(rotation=45) #napis pod kątem

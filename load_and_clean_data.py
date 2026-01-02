@@ -75,7 +75,7 @@ def training_data(clean_training):
     texts = clean_training["review"].copy()
 
     #Własne cechy numeryczne
-    custom_features=["exclamation_count", "digit_count", "question_count", "contrast_count"]
+    custom_features=["vader_pos", "vader_neg", "vader_compound", "exclamation_count", "digit_count", "question_count", "contrast_count"]
     
     X_custom = clean_training[custom_features]
 
