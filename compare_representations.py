@@ -9,8 +9,8 @@ from sentence_transformers import SentenceTransformer
 from load_and_clean_data import training_data
 from train_with_grid_and_custom_features import train_with_grid_and_custom_features, plot_learning_curve
 
-def comparing_representations(pre_clean_training, clean_training):
-    X_text_train, X_text_test, X_custom_train, X_custom_test, y_train, y_test = training_data(pre_clean_training, clean_training)
+def comparing_representations(clean_training):
+    X_text_train, X_text_test, X_custom_train, X_custom_test, y_train, y_test = training_data(clean_training)
 
     #TF-IDF
     vectorizer = TfidfVectorizer()
