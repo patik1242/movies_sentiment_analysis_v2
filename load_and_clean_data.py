@@ -76,10 +76,7 @@ def training_data(pre_clean_training, clean_training):
     texts = pre_clean_training.loc[common_idx, "review"]
 
     #Własne cechy numeryczne
-    custom_features=["pos", "neg","pos_ratio","neg_ratio","negated_pos_count", 
-                        "negated_neg_count", "exclamation_count", 
-                    "digit_count", "question_count", "negation_count", 
-                    "intensifier_count", "contrast_count", "pos_end", "neg_end"]
+    custom_features=["exclamation_count", "digit_count", "question_count", "contrast_count"]
     
     X_custom = clean_training.loc[common_idx, custom_features]
 
