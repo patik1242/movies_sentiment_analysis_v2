@@ -18,9 +18,12 @@ def comparing_representations(clean_training):
     X_train_tfidf = vectorizer.fit_transform(X_text_train)
     X_test_tfidf = vectorizer.transform(X_text_test)
 
+    X_custom_train_sparse = csr_matrix(X_custom_train)
+    X_custom_test_sparse = csr_matrix(X_custom_test)
+
     #Połączenie TF-IDF + custom 
-    X_train_custom_tfidf = hstack([X_train_tfidf, X_custom_train])
-    X_test_custom_tfidf = hstack([X_test_tfidf, X_custom_test])
+    X_train_custom_tfidf = hstack([X_train_tfidf, X_custom_train_sparse])
+    X_test_custom_tfidf = hstack([X_test_tfidf, X_custom_test_sparse])
 
     #Embedder
     try:
@@ -44,14 +47,11 @@ def comparing_representations(clean_training):
         np.save("X_embed_test.npy", X_test_embed)
         
 
-    X_train_embed = csr_matrix(X_train_embed)
-    X_test_embed = csr_matrix(X_test_embed)
-
     #Połączenie embedder + custom 
-    X_train_custom_embed = hstack([X_train_embed, X_custom_train])
-    X_test_custom_embed = hstack([X_test_embed, X_custom_test])
+    X_train_custom_embed = np.hstack([X_train_embed, X_custom_train])
+    X_test_custom_embed = np.hstack([X_test_embed, X_custom_test])
 
-    data = {"custom": [X_custom_train, X_custom_test],
+    data = {"custom": [X_custom_train_sparse, X_custom_test_sparse],
             "tfidf": [X_train_tfidf, X_test_tfidf],
             "embedder": [X_train_embed, X_test_embed],
             "custom_tfidf": [X_train_custom_tfidf, X_test_custom_tfidf], 
@@ -70,7 +70,6 @@ def comparing_representations(clean_training):
     best_model_name = None
     best_estimator = None
     best_rep = None
-    plot_data = []
     best_f1_per_rep = {}
     for representation, model_dict in all_results_imdb.items():
         for model, results in model_dict.items():
@@ -93,7 +92,7 @@ def comparing_representations(clean_training):
         if hasattr(data[best_rep][0], "toarray"):
             X_for_learning_curve = X_for_learning_curve.toarray()
 
-    plot_learning_curve(best_estimator,X_for_learning_curve , y_train, f"Learning curve - {best_model_name}")
+    plot_learning_curve(best_estimator,X_for_learning_curve , y_train, f"Learning_curve_{best_model_name}")
 
     plt.figure(figsize=(12,6))
 
@@ -104,4 +103,5 @@ def comparing_representations(clean_training):
     plt.ylim(0,1) #oś y w przedziale od 0,1
     plt.xticks(rotation=45) #napis pod kątem
     plt.tight_layout()
-    plt.show()
+    plt.savefig("Best_test_F1_per_representation.png")
+    plt.close()

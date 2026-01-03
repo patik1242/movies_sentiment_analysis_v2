@@ -40,7 +40,8 @@ def plot_learning_curve(model, X_train, y_train, title):
     plt.title(title)
     plt.legend()
     plt.grid()
-    plt.show()
+    plt.savefig(title)
+    plt.close()
 
 def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):    
    
@@ -56,7 +57,7 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):
                                                     }
                                                 ),
 
-        "Linear SVM" : (LinearSVC(max_iter=10000, random_state=42, class_weight="balanced"), 
+        "Linear SVM" : (LinearSVC(max_iter=20000, random_state=42, class_weight="balanced"), 
                 {
                     "C": [0.1,1,10], 
                     "loss": ['hinge', 'squared_hinge']
@@ -82,8 +83,14 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):
         
         if model_name == "XGBoost":
             if hasattr(X_train, "toarray"):
-                X_train = X_train.toarray()
-                X_test = X_test.toarray()
+                X_train_model = X_train.toarray()
+                X_test_model = X_test.toarray()
+            else:
+                X_train_model = X_train
+                X_test_model = X_test
+        else:
+            X_train_model = X_train
+            X_test_model = X_test
 
         grid = GridSearchCV(estimator = model, 
                             param_grid=param_grid, 
@@ -96,12 +103,12 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):
                             refit='f1')
         
             
-        grid.fit(X_train, y_train)
+        grid.fit(X_train_model, y_train)
 
         best_model = grid.best_estimator_
 
         train_metrics, test_metrics = train_and_evaluate_model(
-            best_model, X_train, X_test, y_train, y_test, model_name
+            best_model, X_train_model, X_test_model, y_train, y_test, model_name
         )
         
         results_imdb[model_name] = {"best_params": grid.best_params_, 'estimator': grid.best_estimator_, 'train': train_metrics, 'test': test_metrics} 

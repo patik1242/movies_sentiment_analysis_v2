@@ -21,8 +21,9 @@ def calculate_metrics(y_true, y_pred, model_name, split):
     # Wizualizacja macierzy pomyłek tylko dla zbioru testowego
     if split == "test":
         ConfusionMatrixDisplay.from_predictions(y_true, y_pred, cmap="Blues")
-        plt.title(f"Macierz pomyłek - {model_name} ({split})")
-        plt.show()
+        plt.title(f"confusion_matrix_ - {model_name} ({split})")
+        plt.savefig(f"confusion_matrix__{model_name}_({split}).png")
+        plt.close()
 
     # Zwracanie metryk w czytelnym formacie słownika
     return {
