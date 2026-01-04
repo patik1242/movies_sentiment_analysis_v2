@@ -5,7 +5,7 @@ import numpy as np
 
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import learning_curve as learning_curve
-
+from scipy.sparse import issparse
 
 from sklearn.linear_model import RidgeClassifier, LogisticRegression
 from sklearn.svm import LinearSVC
@@ -18,7 +18,7 @@ def plot_learning_curve(model, X_train, y_train, title):
                                                         cv =5, 
                                                         train_sizes = np.linspace(0.1, 1.0, 10),
                                                         n_jobs = -1, 
-                                                        scoring = 'f1')
+                                                        scoring = 'f1_weighted')
     
     mean_training = np.mean(training_scores, axis = 1)
     Standard_Deviation_training = np.std(training_scores, axis=1)
@@ -49,11 +49,10 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):
     classifiers = {
         "Logistic Regression" : (LogisticRegression(max_iter = 5000, 
                                                 random_state=42, 
-                                                solver="saga",
+                                                solver="lbfgs",
                                                 class_weight="balanced",
                                                 ),
                                                 {"C": [10, 100],
-                                                    "l1_ratio": [0, 0.5, 1.0], 
                                                     }
                                                 ),
 
@@ -81,23 +80,15 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):
 
     for model_name, (model, param_grid) in classifiers.items():
         
-        if model_name == "XGBoost":
-            if hasattr(X_train, "toarray"):
-                X_train_model = X_train.toarray()
-                X_test_model = X_test.toarray()
-            else:
-                X_train_model = X_train
-                X_test_model = X_test
-        else:
-            X_train_model = X_train
-            X_test_model = X_test
+        X_train_model = X_train
+        X_test_model = X_test
 
         grid = GridSearchCV(estimator = model, 
                             param_grid=param_grid, 
-                            scoring={'accuracy': 'accuracy', 
-                                        'f1': 'f1', 
-                                        'precision': 'precision', 
-                                        'recall': 'recall'}, 
+                            scoring={'accuracy': 'accuracy_weighted', 
+                                        'f1': 'f1_weighted', 
+                                        'precision': 'precision_weighted', 
+                                        'recall': 'recall_weighted'}, 
                             n_jobs=-1, 
                             verbose=2, 
                             refit='f1')

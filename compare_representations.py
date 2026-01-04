@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from sklearn.feature_extraction.text import TfidfVectorizer
-from scipy.sparse import hstack, csr_matrix
+from scipy.sparse import hstack, csr_matrix, issparse
 from sentence_transformers import SentenceTransformer
 from xgboost import XGBClassifier
 
@@ -89,10 +89,12 @@ def comparing_representations(clean_training):
     X_for_learning_curve = data[best_rep][0]
 
     if isinstance(best_estimator, XGBClassifier):
-        if hasattr(data[best_rep][0], "toarray"):
-            X_for_learning_curve = X_for_learning_curve.toarray()
+        pass
 
-    plot_learning_curve(best_estimator,X_for_learning_curve , y_train, f"Learning_curve_{best_model_name}")
+    if isinstance(best_estimator, XGBClassifier) and issparse(X_for_learning_curve):
+        print("Skipping learning_curve for XGBoost + sparse")
+    else:
+        plot_learning_curve(best_estimator,X_for_learning_curve , y_train, f"Learning_curve_{best_model_name}")
 
     plt.figure(figsize=(12,6))
 

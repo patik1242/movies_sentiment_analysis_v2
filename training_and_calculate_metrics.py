@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, ConfusionMatrixDisplay
-
+import os 
 
 def calculate_metrics(y_true, y_pred, model_name, split):
     """ 
@@ -9,7 +9,7 @@ def calculate_metrics(y_true, y_pred, model_name, split):
     accuracy = accuracy_score(y_true, y_pred)
     precision = precision_score(y_true, y_pred, average="weighted", zero_division=0)
     recall = recall_score(y_true, y_pred, average="weighted", zero_division=0)
-    f1 = f1_score(y_true, y_pred, average="weighted")
+    f1 = f1_score(y_true, y_pred, average="weighted", zero_division=0)
 
     # Wyświetlenie wyników dla danego podziału danych
     print(f"\nMetryki dla {model_name} ({split}): \n")
@@ -18,11 +18,17 @@ def calculate_metrics(y_true, y_pred, model_name, split):
     print(f"Recall: {recall:.4f}")
     print(f"F1-Score: {f1:.4f}")
 
+    title = f"confusion_matrix - {model_name} ({split})"
     # Wizualizacja macierzy pomyłek tylko dla zbioru testowego
     if split == "test":
         ConfusionMatrixDisplay.from_predictions(y_true, y_pred, cmap="Blues")
-        plt.title(f"confusion_matrix_ - {model_name} ({split})")
-        plt.savefig(f"confusion_matrix__{model_name}_({split}).png")
+        plt.title(title)
+        filename = f"{title}.png"
+        i=1
+        while os.path.exists(filename):
+            filename = f"{title}_{i}.png"
+            i+=1
+        plt.savefig(filename)
         plt.close()
 
     # Zwracanie metryk w czytelnym formacie słownika
