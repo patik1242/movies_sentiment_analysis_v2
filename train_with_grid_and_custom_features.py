@@ -13,36 +13,6 @@ from xgboost import XGBClassifier
 
 from training_and_calculate_metrics import train_and_evaluate_model
 
-def plot_learning_curve(model, X_train, y_train, title):
-    sizes, training_scores, val_scores = learning_curve(model, X_train, y_train, 
-                                                        cv =5, 
-                                                        train_sizes = np.linspace(0.1, 1.0, 10),
-                                                        n_jobs = -1, 
-                                                        scoring = 'f1_weighted')
-    
-    mean_training = np.mean(training_scores, axis = 1)
-    Standard_Deviation_training = np.std(training_scores, axis=1)
-
-    mean_val = np.mean(val_scores, axis = 1)
-    Standard_Deviation_val = np.std(val_scores, axis=1)
-
-    plt.figure(figsize=(10,6))
-    plt.plot(sizes,mean_training,label = 'Train', color = 'blue')
-    plt.fill_between(sizes, mean_training - Standard_Deviation_training, 
-                     mean_training+Standard_Deviation_training, alpha=0.2)
-    
-    plt.plot(sizes, mean_val, label = "Validation", color = "red")
-    plt.fill_between(sizes, mean_val-Standard_Deviation_val, 
-                     mean_val+Standard_Deviation_val, alpha = 0.2)
-    
-    plt.xlabel('Training Set Size')
-    plt.ylabel('F1 Score')
-    plt.title(title)
-    plt.legend()
-    plt.grid()
-    plt.savefig(title)
-    plt.close()
-
 def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):    
    
     #Modele z parametrami
