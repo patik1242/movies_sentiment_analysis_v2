@@ -188,12 +188,19 @@ Requirements:
 Listed in requirements.txt
 
 -pandas
+
 -numpy
+
 -scikit-learn
+
 -scipy
+
 -matplotlib
+
 -sentence-transformers
+
 -xgboost
+
 -vaderSentiment
 
 ## 🎯 Project Goals
