@@ -40,9 +40,6 @@ def calculate_metrics(y_true, y_pred, model_name, split):
     }
 
 def train_and_evaluate_model(model, X_train, X_test, y_train, y_test, model_name):
-    #Trening modelu na zbiorze treningowym
-    model.fit(X_train, y_train)
-
     #Predykcje modelu na train i test 
     y_train_pred = model.predict(X_train)
     y_test_pred = model.predict(X_test)

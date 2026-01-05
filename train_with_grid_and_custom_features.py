@@ -1,11 +1,5 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-
 
 from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import learning_curve as learning_curve
-from scipy.sparse import issparse
 
 from sklearn.linear_model import RidgeClassifier, LogisticRegression
 from sklearn.svm import LinearSVC
@@ -13,7 +7,7 @@ from xgboost import XGBClassifier
 
 from training_and_calculate_metrics import train_and_evaluate_model
 
-def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):    
+def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowed_models=None):    
    
     #Modele z parametrami
     classifiers = {
@@ -38,17 +32,17 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):
 
         "XGBoost": (XGBClassifier(objective = "binary:logistic", random_state = 42, n_jobs = -1, verbosity = 0, eval_metric = "logloss"), 
                     {
-                        "max_depth": [4,6], 
-                        "n_estimators": [200,400], 
-                        "learning_rate": [0.05, 0.1],
-                        "subsample": [0.8,1.0], 
-                        "colsample_bytree": [0.8, 1.0]
+                        "max_depth": [2,3,4], 
+                        "n_estimators": [100,200]
                     })
     }
 
     results_imdb = {}
 
     for model_name, (model, param_grid) in classifiers.items():
+
+        if allowed_models is not None and model_name not in allowed_models:
+            continue
         
         X_train_model = X_train
         X_test_model = X_test
@@ -61,7 +55,8 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):
                                         'recall': 'recall_weighted'}, 
                             n_jobs=-1, 
                             verbose=2, 
-                            refit='f1')
+                            refit='f1', 
+                            cv=5)
         
             
         grid.fit(X_train_model, y_train)

@@ -5,10 +5,10 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import hstack, csr_matrix
 from sentence_transformers import SentenceTransformer
-from xgboost import XGBClassifier
 
-from load_and_clean_data import training_data
+from preparation import training_data
 from train_with_grid_and_custom_features import train_with_grid_and_custom_features
+from feature_importance import evaluate_feature_importance
 
 def comparing_representations(clean_training):
     X_text_train, X_text_test, X_custom_train, X_custom_test, y_train, y_test = training_data(clean_training)
@@ -60,9 +60,14 @@ def comparing_representations(clean_training):
     all_results_imdb = {}
     for rep_model, (X_tr, X_te) in data.items():
 
+        if rep_model != "custom":
+            allowed_models = ["Logistic Regression", "Linear SVM", "RidgeClassifier"]
+        else:
+            allowed_models = ["Logistic Regression", "Linear SVM", "RidgeClassifier", "XGBoost"]
+
 
         results_imdb = train_with_grid_and_custom_features(
-            X_tr, X_te, y_train, y_test)
+            X_tr, X_te, y_train, y_test, allowed_models=allowed_models)
             
         all_results_imdb[rep_model] = results_imdb
     
@@ -87,8 +92,18 @@ def comparing_representations(clean_training):
                 best_f1_per_rep[representation] = max(best_f1_per_rep[representation], f1)
     
 
-    if isinstance(best_estimator, XGBClassifier):
-        pass
+    if best_rep =="custom":
+        importance_df = evaluate_feature_importance(
+            model = best_estimator, 
+            X = X_custom_test, 
+            y = y_test
+        )
+
+        importance_df.sort_values("importance").plot.barh(
+            x="feature", y = "importance", legend = False, figsize=(8,5))
+        plt.tight_layout()
+        plt.savefig("feature_importance_custom.png")
+        plt.close()
 
     plt.figure(figsize=(12,6))
 
