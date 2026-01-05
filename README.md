@@ -1,25 +1,27 @@
-# 🎬 Analiza sentymentu recenzji filmowych (IMDB)
+# 🎬 Sentiment Analysis of Movie Reviews (IMDB)
 
-Projekt dotyczy **klasyfikacji sentymentu recenzji filmowych** (pozytywny / negatywny) z wykorzystaniem różnych reprezentacji tekstu oraz modeli uczenia maszynowego.  
-Celem jest **porównanie skuteczności reprezentacji tekstu** oraz analiza wpływu **ręcznie zaprojektowanych cech lingwistycznych**.
+This project focuses on **sentiment classification of movie reviews** (positive / negative) using various text representations and machine learning models.  
+The main goal is to **compare the effectiveness of different text representations** and analyze the impact of **manually engineered linguistic features**.
 
 ---
 
-## 📌 Zakres projektu
+## 📌 Project Scope
 
-W projekcie porównywane są następujące reprezentacje tekstu:
+The following text representations are compared in this project:
 
-- **Cechy ręczne (custom features)**
+- **Hand-crafted features (custom features)**
 - **TF-IDF**
-- **Embeddingi SentenceTransformer (DistilBERT)**
-- **TF-IDF + cechy ręczne**
-- **Embeddingi + cechy ręczne**
+- **SentenceTransformer embeddings (DistilBERT)**
+- **TF-IDF + custom features**
+- **Embeddings + custom features**
 
-Dla każdej reprezentacji trenowane są różne klasyfikatory, a następnie wybierany jest najlepszy model na podstawie metryki **F1-score**.
+For each representation, multiple classifiers are trained and the best model is selected based on the **F1-score**.
 
 ---
 
-## 📂 Struktura projektu
+## 📂 Project Structure
+
+```text
 .
 ├── data/
 │   └── IMDB_Dataset.csv
@@ -40,154 +42,150 @@ Dla każdej reprezentacji trenowane są różne klasyfikatory, a następnie wybi
 ├── Best_test_F1_per_representation.png
 └── feature_importance_custom.png
 
-## 📁 Dane wejściowe
+
+---
+
+## 📁 Input Data
 
 ### `data/IMDB_Dataset.csv`
 
-Projekt wykorzystuje publiczny zbiór danych **IMDB Movie Reviews Dataset**, zawierający recenzje filmowe wraz z etykietami sentymentu.
+The project uses the public **IMDB Movie Reviews Dataset**, which contains movie reviews along with sentiment labels.
 
-### 📄 Opis pliku
+### 📄 File Description
 
 - **Format:** CSV  
-- **Liczba rekordów:** 50 000  
-- **Liczba klas:** 2 (zbalansowane)
+- **Number of records:** 50,000  
+- **Number of classes:** 2 (balanced)
 
-### 🧾 Kolumny
+### 🧾 Columns
 
-| Kolumna | Typ | Opis |
-|-------|----|------|
-| `review` | string | Tekst recenzji filmowej |
-| `sentiment` | string | Etykieta: `positive` / `negative` |
+| Column | Type | Description |
+|------|------|-------------|
+| `review` | string | Movie review text |
+| `sentiment` | string | Sentiment label: `positive` / `negative` |
 
-### ⚖️ Rozkład klas
+### ⚖️ Class Distribution
 
 - `positive`: ~50%
 - `negative`: ~50%
 
 ---
 
-## 🧹 Czyszczenie i preprocessing danych
+## 🧹 Data Cleaning and Preprocessing
 
-Realizowany w plikach:
+Implemented in:
 - `load_and_clean_data.py`
 - `preprocess.py`
 
-Wykonywane operacje:
-- usunięcie duplikatów
-- analiza braków danych
-- czyszczenie tekstu
-- normalizacja liter
-- usunięcie pustych recenzji
-- mapowanie etykiet:
+Processing steps:
+- removal of duplicate entries
+- missing value analysis
+- text cleaning
+- lowercase normalization
+- removal of empty reviews
+- label mapping:
   negative -> 0
   positive -> 1
 
 
 ---
 
-## 🧠 Ekstrakcja cech ręcznych
-
-Plik: `dictionaries_and_extracting_features.py`
-
-Wykorzystywane cechy:
-- `vader_pos`
-- `vader_neg`
-- `vader_compound`
-- liczba wykrzykników
-- liczba znaków zapytania
-- liczba cyfr
-- liczba słów kontrastujących (`but`, `however`, `although`, ...)
-
-Cechy są **standaryzowane** (`StandardScaler`).
 
 ---
 
-## 🧾 Reprezentacje tekstu
+## 🧠 Hand-Crafted Feature Extraction
 
-Plik: `compare_representation.py`
+File: `dictionaries_and_extracting_features.py`
 
-Tworzone reprezentacje:
+Extracted features:
+- `vader_pos`
+- `vader_neg`
+- `vader_compound`
+- number of exclamation marks
+- number of question marks
+- number of digits
+- number of contrast words (`but`, `however`, `although`, ...)
+
+All features are **standardized** using `StandardScaler`.
+
+---
+
+## 🧾 Text Representations
+
+File: `compare_representation.py`
+
+The following representations are created:
 - TF-IDF
-- embeddingi SentenceTransformer (`distilbert-base-uncased`)
-- kombinacje z cechami ręcznymi
+- SentenceTransformer embeddings (`distilbert-base-uncased`)
+- combinations with custom features
 
-Embeddingi są **cache’owane** do plików:
+Embeddings are **cached** to disk:
 X_embed_train.npy
 X_embed_test.npy
 
 
----
-
-## 🤖 Modele i trenowanie
-
-Plik: `train_with_grid_and_custom_features.py`
-
-Modele:
-- Logistic Regression
-- Linear SVM
-- Ridge Classifier
-- XGBoost (tylko dla cech ręcznych)
-
-Trenowanie:
-- GridSearchCV (5-fold CV)
-- optymalizacja pod **F1-score**
-- balans klas (`class_weight="balanced"`)
 
 ---
 
-## 📊 Ewaluacja modeli
+## 🧠 Hand-Crafted Feature Extraction
 
-Plik: `training_and_calculate_metrics.py`
+File: `dictionaries_and_extracting_features.py`
 
-Obliczane metryki:
-- Accuracy
-- Precision
-- Recall
-- F1-score
+Extracted features:
+- `vader_pos`
+- `vader_neg`
+- `vader_compound`
+- number of exclamation marks
+- number of question marks
+- number of digits
+- number of contrast words (`but`, `however`, `although`, ...)
 
-Dla zbioru testowego zapisywana jest:
-- macierz pomyłek (`confusion matrix`)
-
----
-
-## 📈 Porównanie reprezentacji
-
-Dla każdej reprezentacji wybierany jest najlepszy model (wg F1-score).
-
-Wynik porównania zapisywany jest jako:
-
-Best_test_F1_per_representation.png
-
+All features are **standardized** using `StandardScaler`.
 
 ---
 
-## 🔍 Analiza ważności cech
+## 🧾 Text Representations
 
-Jeżeli najlepszą reprezentacją są **cechy ręczne**, wykonywana jest analiza ważności cech:
+File: `compare_representation.py`
 
-- współczynniki modeli liniowych
-- feature_importances_ (modele drzewiaste)
-- permutation importance (fallback)
+The following representations are created:
+- TF-IDF
+- SentenceTransformer embeddings (`distilbert-base-uncased`)
+- combinations with custom features
 
-Wynik:
+Embeddings are **cached** to disk:
+
 feature_importance_custom.png
 
 
 ---
 
-## ▶️ Uruchomienie projektu
+## 🔍 Feature Importance Analysis
 
-1. Instalacja zależności:
+If the best-performing representation consists of **custom features**, feature importance analysis is performed using:
+- linear model coefficients
+- tree-based feature importances
+- permutation importance (fallback)
+
+The result is saved as:
+
+
+---
+
+## ▶️ Running the Project
+
+1. Install dependencies:
 ```bash
 pip install -r requirements.txt
+
 ```
-Uruchomienie pipeline’u:
+Run the pipeline::
 ``
 python main.py
 ``
-Wymagania: 
+Requirements: 
 
-Plik: requirements.txt
+Listed in requirements.txt
 
 -pandas
 -numpy
@@ -198,15 +196,15 @@ Plik: requirements.txt
 -xgboost
 -vaderSentiment
 
-## 🎯 Cel projektu
+## 🎯 Project Goals
 
-Projekt umożliwia:
+This project enables:
 
--porównanie klasycznych i nowoczesnych reprezentacji tekstu
--ocenę wpływu cech lingwistycznych na jakość klasyfikacji
--interpretację wyników modeli NLP
+-comparison of classical and modern text representations
+-evaluation of the impact of linguistic features on classification quality
+-interpretation of NLP model behavio
 
-📚 Źródło danych
+📚 Data Source
 
 IMDB Movie Reviews Dataset
 [IMDB Movie Reviews Dataset](https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews)
