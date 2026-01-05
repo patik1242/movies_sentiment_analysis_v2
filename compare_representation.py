@@ -6,8 +6,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import hstack, csr_matrix
 from sentence_transformers import SentenceTransformer
 
-from load_and_clean_data import training_data
-from train_with_grid_and_custom_features import train_with_grid_and_custom_features, plot_learning_curve
+from preparation import training_data
+from train_with_grid_and_custom_features import train_with_grid_and_custom_features
+from feature_importance import evaluate_feature_importance
 
 def comparing_representations(clean_training):
     X_text_train, X_text_test, X_custom_train, X_custom_test, y_train, y_test = training_data(clean_training)
@@ -17,9 +18,12 @@ def comparing_representations(clean_training):
     X_train_tfidf = vectorizer.fit_transform(X_text_train)
     X_test_tfidf = vectorizer.transform(X_text_test)
 
+    X_custom_train_sparse = csr_matrix(X_custom_train)
+    X_custom_test_sparse = csr_matrix(X_custom_test)
+
     #Połączenie TF-IDF + custom 
-    X_train_custom_tfidf = hstack([X_train_tfidf, X_custom_train])
-    X_test_custom_tfidf = hstack([X_test_tfidf, X_custom_test])
+    X_train_custom_tfidf = hstack([X_train_tfidf, X_custom_train_sparse])
+    X_test_custom_tfidf = hstack([X_test_tfidf, X_custom_test_sparse])
 
     #Embedder
     try:
@@ -43,14 +47,11 @@ def comparing_representations(clean_training):
         np.save("X_embed_test.npy", X_test_embed)
         
 
-    X_train_embed = csr_matrix(X_train_embed)
-    X_test_embed = csr_matrix(X_test_embed)
-
     #Połączenie embedder + custom 
-    X_train_custom_embed = hstack([X_train_embed, X_custom_train])
-    X_test_custom_embed = hstack([X_test_embed, X_custom_test])
+    X_train_custom_embed = np.hstack([X_train_embed, X_custom_train])
+    X_test_custom_embed = np.hstack([X_test_embed, X_custom_test])
 
-    data = {"custom": [X_custom_train, X_custom_test],
+    data = {"custom": [X_custom_train_sparse, X_custom_test_sparse],
             "tfidf": [X_train_tfidf, X_test_tfidf],
             "embedder": [X_train_embed, X_test_embed],
             "custom_tfidf": [X_train_custom_tfidf, X_test_custom_tfidf], 
@@ -59,9 +60,14 @@ def comparing_representations(clean_training):
     all_results_imdb = {}
     for rep_model, (X_tr, X_te) in data.items():
 
+        if rep_model != "custom":
+            allowed_models = ["Logistic Regression", "Linear SVM", "RidgeClassifier"]
+        else:
+            allowed_models = ["Logistic Regression", "Linear SVM", "RidgeClassifier", "XGBoost"]
+
 
         results_imdb = train_with_grid_and_custom_features(
-            X_tr, X_te, y_train, y_test)
+            X_tr, X_te, y_train, y_test, allowed_models=allowed_models)
             
         all_results_imdb[rep_model] = results_imdb
     
@@ -69,7 +75,7 @@ def comparing_representations(clean_training):
     best_model_name = None
     best_estimator = None
     best_rep = None
-    plot_data = []
+    best_f1_per_rep = {}
     for representation, model_dict in all_results_imdb.items():
         for model, results in model_dict.items():
             f1 = results["test"]["f1"]
@@ -80,21 +86,33 @@ def comparing_representations(clean_training):
                 best_rep = representation
                 best_model_name = model
             
-            plot_data.append({
-                'Representation': representation,
-                'Model': model,  
-                'F1': f1
-        })
+            if representation not in best_f1_per_rep:
+                best_f1_per_rep[representation] = f1
+            else:
+                best_f1_per_rep[representation] = max(best_f1_per_rep[representation], f1)
+    
 
-    plot_learning_curve(best_estimator, data[best_rep][0], y_train, f"Learning curve - {best_model_name}")
+    if best_rep =="custom":
+        importance_df = evaluate_feature_importance(
+            model = best_estimator, 
+            X = X_custom_test, 
+            y = y_test
+        )
+
+        importance_df.sort_values("importance").plot.barh(
+            x="feature", y = "importance", legend = False, figsize=(8,5))
+        plt.tight_layout()
+        plt.savefig("feature_importance_custom.png")
+        plt.close()
 
     plt.figure(figsize=(12,6))
 
-    df_plot = pd.DataFrame(plot_data)
-    df_plot.set_index('Representation')["F1"].plot(kind='bar', figsize=(12,6))
-    plt.title(f"Porównanie metryk testowych — IMDB")
+    df_plot = pd.DataFrame.from_dict(best_f1_per_rep, orient = "index", columns =["F1"])
+    df_plot.plot(kind="bar", legend=False)
+    plt.title(f"Best test F1 per representation")
     plt.ylabel("Wartosc metryki")
     plt.ylim(0,1) #oś y w przedziale od 0,1
     plt.xticks(rotation=45) #napis pod kątem
     plt.tight_layout()
-    plt.show()
+    plt.savefig("Best_test_F1_per_representation.png")
+    plt.close()

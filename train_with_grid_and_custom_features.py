@@ -1,11 +1,5 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-
 
 from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import learning_curve as learning_curve
-
 
 from sklearn.linear_model import RidgeClassifier, LogisticRegression
 from sklearn.svm import LinearSVC
@@ -13,50 +7,20 @@ from xgboost import XGBClassifier
 
 from training_and_calculate_metrics import train_and_evaluate_model
 
-def plot_learning_curve(model, X_train, y_train, title):
-    sizes, training_scores, val_scores = learning_curve(model, X_train, y_train, 
-                                                        cv =5, 
-                                                        train_sizes = np.linspace(0.1, 1.0, 10),
-                                                        n_jobs = -1, 
-                                                        scoring = 'f1')
-    
-    mean_training = np.mean(training_scores, axis = 1)
-    Standard_Deviation_training = np.std(training_scores, axis=1)
-
-    mean_val = np.mean(val_scores, axis = 1)
-    Standard_Deviation_val = np.std(val_scores, axis=1)
-
-    plt.figure(figsize=(10,6))
-    plt.plot(sizes,mean_training,label = 'Train', color = 'blue')
-    plt.fill_between(sizes, mean_training - Standard_Deviation_training, 
-                     mean_training+Standard_Deviation_training, alpha=0.2)
-    
-    plt.plot(sizes, mean_val, label = "Validation", color = "red")
-    plt.fill_between(sizes, mean_val-Standard_Deviation_val, 
-                     mean_val+Standard_Deviation_val, alpha = 0.2)
-    
-    plt.xlabel('Training Set Size')
-    plt.ylabel('F1 Score')
-    plt.title(title)
-    plt.legend()
-    plt.grid()
-    plt.show()
-
-def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):    
+def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowed_models=None):    
    
     #Modele z parametrami
     classifiers = {
         "Logistic Regression" : (LogisticRegression(max_iter = 5000, 
                                                 random_state=42, 
-                                                solver="saga",
+                                                solver="lbfgs",
                                                 class_weight="balanced",
                                                 ),
                                                 {"C": [10, 100],
-                                                    "l1_ratio": [0, 0.5, 1.0], 
                                                     }
                                                 ),
 
-        "Linear SVM" : (LinearSVC(max_iter=10000, random_state=42, class_weight="balanced"), 
+        "Linear SVM" : (LinearSVC(max_iter=20000, random_state=42, class_weight="balanced"), 
                 {
                     "C": [0.1,1,10], 
                     "loss": ['hinge', 'squared_hinge']
@@ -68,40 +32,39 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test):
 
         "XGBoost": (XGBClassifier(objective = "binary:logistic", random_state = 42, n_jobs = -1, verbosity = 0, eval_metric = "logloss"), 
                     {
-                        "max_depth": [4,6], 
-                        "n_estimators": [200,400], 
-                        "learning_rate": [0.05, 0.1],
-                        "subsample": [0.8,1.0], 
-                        "colsample_bytree": [0.8, 1.0]
+                        "max_depth": [2,3,4], 
+                        "n_estimators": [100,200]
                     })
     }
 
     results_imdb = {}
 
     for model_name, (model, param_grid) in classifiers.items():
+
+        if allowed_models is not None and model_name not in allowed_models:
+            continue
         
-        if model_name == "XGBoost":
-            if hasattr(X_train, "toarray"):
-                X_train = X_train.toarray()
-                X_test = X_test.toarray()
+        X_train_model = X_train
+        X_test_model = X_test
 
         grid = GridSearchCV(estimator = model, 
                             param_grid=param_grid, 
-                            scoring={'accuracy': 'accuracy', 
-                                        'f1': 'f1', 
-                                        'precision': 'precision', 
-                                        'recall': 'recall'}, 
+                            scoring={'accuracy': 'accuracy_weighted', 
+                                        'f1': 'f1_weighted', 
+                                        'precision': 'precision_weighted', 
+                                        'recall': 'recall_weighted'}, 
                             n_jobs=-1, 
                             verbose=2, 
-                            refit='f1')
+                            refit='f1', 
+                            cv=5)
         
             
-        grid.fit(X_train, y_train)
+        grid.fit(X_train_model, y_train)
 
         best_model = grid.best_estimator_
 
         train_metrics, test_metrics = train_and_evaluate_model(
-            best_model, X_train, X_test, y_train, y_test, model_name
+            best_model, X_train_model, X_test_model, y_train, y_test, model_name
         )
         
         results_imdb[model_name] = {"best_params": grid.best_params_, 'estimator': grid.best_estimator_, 'train': train_metrics, 'test': test_metrics} 

@@ -1,7 +1,6 @@
 import pandas as pd
 from preprocess import preprocess
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+
 
 def load_and_clean_data():
     """
@@ -69,32 +68,3 @@ def load_and_clean_data():
     print("Number of NaN values: ",clean_training["sentiment"].isna().sum())
 
     return clean_training
-
-def training_data(clean_training):
-    
-    texts = clean_training["review"].copy()
-
-    #Własne cechy numeryczne
-    custom_features=["pos", "neg","pos_ratio","neg_ratio","negated_pos_count", 
-                        "negated_neg_count", "exclamation_count", 
-                    "digit_count", "question_count", "negation_count", 
-                    "intensifier_count", "contrast_count", "pos_end", "neg_end"]
-    
-    X_custom = clean_training[custom_features]
-
-    #etykiety klas sentymentu
-    y = clean_training["sentiment"]
-
-    #Podział danych
-    (X_text_train, X_text_test, X_custom_train, X_custom_test,y_train, y_test) = train_test_split(
-        texts, X_custom, y, test_size=0.2, random_state=42, stratify=y)
-    
-    #Standaryzacja cech numerycznych
-    scaler = StandardScaler()
-
-    X_custom_train = scaler.fit_transform(X_custom_train)
-    X_custom_test = scaler.transform(X_custom_test)
-
-    return (X_text_train, X_text_test, 
-            X_custom_train, X_custom_test, 
-            y_train, y_test)
