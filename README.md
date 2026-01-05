@@ -201,7 +201,9 @@ Listed in requirements.txt
 This project enables:
 
 -comparison of classical and modern text representations
+
 -evaluation of the impact of linguistic features on classification quality
+
 -interpretation of NLP model behavio
 
 📚 Data Source
@@ -211,4 +213,4 @@ IMDB Movie Reviews Dataset
 
 
 
-analizować interpretowalność modeli NLP
+
