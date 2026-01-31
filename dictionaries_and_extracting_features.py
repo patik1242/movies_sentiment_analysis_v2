@@ -19,17 +19,28 @@ def extract_features(text):
     question_count = text.count("?")
 
     scores = analyzer.polarity_scores(text)
+    pos = scores["pos"]
+    neg = scores["neg"]
+    compound = scores["compound"]
 
     return {
-        "vader_pos": scores["pos"], 
-        "vader_neg": scores["neg"],
-        "vader_compound": scores["compound"],
+        "vader_pos": pos, 
+        "vader_neg": neg,
+        "vader_compound": compound,
         "exclamation_count": exclamation_count, 
         "digit_count": digit_count, 
         "question_count": question_count, 
         "contrast_count": contrast_count, 
-        "has_exlamation": int(exclamation_count)>0,
+        "has_exclamation": int(exclamation_count)>0,
         "has_question": int(question_count)>0, 
         "has_contrast": int(contrast_count)>0, 
-        "has_digits": int(digit_count)>0,  
+        "has_digits": int(digit_count)>0, 
+        "neg_dominates": int(neg>pos),
+        "pos_dominates": int(pos>neg), 
+        "high_positive": int(pos>0.5),
+        "high_negative": int(neg>0.5),
+        "pos_neg_diff": pos-neg,
+        "mixed_sentiment": int((pos>0.1) and (neg>0.1)),
+        "neg_to_pos_ratio": neg / pos if pos > 0 else neg, 
+        "compound_mismatch": abs(compound- (pos-neg))
     }

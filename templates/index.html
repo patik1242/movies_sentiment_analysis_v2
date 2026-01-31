@@ -1,19 +1,42 @@
 <!doctype html>
 <html>
+<head>
+<title>Enter Text</title>
 <style>
-form {
-    margin: auto;
-    width: 35%;
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #190a24, #588cf6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    width: 70%;
+    max-width: 900px;
+}
+
+form {
+    width: 100%;
+}
+
 .result {
-    margin: auto;
-    width: 35%;
-    border: 1px solid #ccc;
+    margin-top: 30px;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 </style>
-<head>
-    <title>Enter Text</title>
 </head>
+<body>
+<div class="container">
 <form action="{{ url_for('index') }}" method="POST">
     <fieldset>
         <legend>Enter Review:</legend>
@@ -34,5 +57,6 @@ form {
     {% endif %}
 </div>
 {% endif %}
+</div>
 </body>
 </html>

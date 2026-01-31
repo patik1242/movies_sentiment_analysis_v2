@@ -19,7 +19,7 @@ def comparing_representations(clean_training):
     X_text_train, X_text_test, X_custom_train, X_custom_test, y_train, y_test, scaler = training_data(clean_training)
 
     #TF-IDF
-    vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=2)
+    vectorizer = TfidfVectorizer(ngram_range=(1,3), min_df=2)
     X_train_tfidf = vectorizer.fit_transform(X_text_train)
     X_test_tfidf = vectorizer.transform(X_text_test)
 
