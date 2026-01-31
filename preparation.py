@@ -33,4 +33,4 @@ def training_data(clean_training):
 
     return (X_text_train, X_text_test, 
             X_custom_train, X_custom_test, 
-            y_train, y_test)
+            y_train, y_test, scaler)

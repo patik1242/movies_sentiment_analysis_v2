@@ -28,4 +28,8 @@ def extract_features(text):
         "digit_count": digit_count, 
         "question_count": question_count, 
         "contrast_count": contrast_count, 
+        "has_exlamation": int(exclamation_count)>0,
+        "has_question": int(question_count)>0, 
+        "has_contrast": int(contrast_count)>0, 
+        "has_digits": int(digit_count)>0,  
     }
