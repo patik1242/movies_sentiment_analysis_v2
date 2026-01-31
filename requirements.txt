@@ -6,3 +6,4 @@ matplotlib
 sentence-transformers
 xgboost
 vaderSentiment
+flask
