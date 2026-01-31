@@ -41,7 +41,7 @@ For each representation, multiple classifiers are trained and the best model is 
 ├── X_embed_test.npy
 ├── Best_test_F1_per_representation.png
 └── feature_importance_custom.png
-
+```
 
 ---
 
@@ -188,12 +188,19 @@ Requirements:
 Listed in requirements.txt
 
 -pandas
+
 -numpy
+
 -scikit-learn
+
 -scipy
+
 -matplotlib
+
 -sentence-transformers
+
 -xgboost
+
 -vaderSentiment
 
 ## 🎯 Project Goals
@@ -201,7 +208,9 @@ Listed in requirements.txt
 This project enables:
 
 -comparison of classical and modern text representations
+
 -evaluation of the impact of linguistic features on classification quality
+
 -interpretation of NLP model behavio
 
 📚 Data Source
@@ -211,4 +220,4 @@ IMDB Movie Reviews Dataset
 
 
 
-analizować interpretowalność modeli NLP
+
