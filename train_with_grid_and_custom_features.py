@@ -20,15 +20,15 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowe
                                                     }
                                                 ),
 
-        "Linear SVM" : (LinearSVC(max_iter=20000, random_state=42, class_weight="balanced"), 
+        "Linear SVM" : (LinearSVC(max_iter=20000, random_state=42), 
                 {
-                    "C": [0.1,1,10], 
+                    "C": [0.1,1], 
                     "loss": ['hinge', 'squared_hinge']
                 }),
 
         "RidgeClassifier": (RidgeClassifier(class_weight="balanced"), 
                             {"alpha": [0.01, 0.1, 1, 10], 
-                            "solver": ['auto', 'svd', 'lsqr']}),
+                            "solver": ['auto', 'lsqr']}),
 
         "XGBoost": (XGBClassifier(objective = "binary:logistic", random_state = 42, n_jobs = -1, verbosity = 0, eval_metric = "logloss"), 
                     {
@@ -49,10 +49,7 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowe
 
         grid = GridSearchCV(estimator = model, 
                             param_grid=param_grid, 
-                            scoring={'accuracy': 'accuracy_weighted', 
-                                        'f1': 'f1_weighted', 
-                                        'precision': 'precision_weighted', 
-                                        'recall': 'recall_weighted'}, 
+                            scoring = "f1", 
                             n_jobs=-1, 
                             verbose=2, 
                             refit='f1', 

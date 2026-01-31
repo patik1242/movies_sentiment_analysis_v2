@@ -111,10 +111,14 @@ def comparing_representations(clean_training):
         vectorizer = vectorizer if "tfidf" in best_rep else None, 
         scaler = scaler if "custom" in best_rep else None
     )
+
+    X_custom_train_df = X_custom_train.copy()
+    X_custom_test_df = X_custom_test.copy()
+
     if best_rep =="custom":
         importance_df = evaluate_feature_importance(
             model = best_estimator, 
-            X = X_custom_test, 
+            X = X_custom_test_df, 
             y = y_test
         )
 
