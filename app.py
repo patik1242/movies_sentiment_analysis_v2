@@ -24,7 +24,7 @@ def index():
 
         pred = model.predict(X)[0]
 
-        sentiment = "Pozytywny" if pred==1 else "Negatywny"
+        sentiment = "Positive" if pred==1 else "Negative"
 
     return flask.render_template("index.html", sentiment=sentiment)
 
