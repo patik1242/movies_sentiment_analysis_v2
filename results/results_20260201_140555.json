@@ -1,0 +1,310 @@
+{
+  "timestamp": "20260201_140555",
+  "best_model": {
+    "name": "Linear SVM",
+    "representation": "tfidf",
+    "f1_score": 0.9180071310746831
+  },
+  "best_f1_per_representation": {
+    "custom": 0.7483304355710397,
+    "tfidf": 0.9180071310746831,
+    "embedder": 0.8864574595227972,
+    "custom_tfidf": 0.9152934505760126,
+    "custom_embedder": 0.8897831776610281
+  },
+  "all_models": {
+    "custom": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 10
+        },
+        "train_metrics": {
+          "accuracy": 0.7431992940879869,
+          "precision": 0.7432214489504314,
+          "recall": 0.7431992940879869,
+          "f1": 0.7431991684062923
+        },
+        "test_metrics": {
+          "accuracy": 0.7461934052636886,
+          "precision": 0.7462030946891938,
+          "recall": 0.7461934052636886,
+          "f1": 0.7461942362598413
+        }
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 1,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.7428715492247573,
+          "precision": 0.7430928440988375,
+          "recall": 0.7428715492247573,
+          "f1": 0.7427892238474632
+        },
+        "test_metrics": {
+          "accuracy": 0.745185035797116,
+          "precision": 0.7454775066433637,
+          "recall": 0.745185035797116,
+          "f1": 0.7450827514247041
+        }
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 0.01,
+          "solver": "lsqr"
+        },
+        "train_metrics": {
+          "accuracy": 0.7409807134753561,
+          "precision": 0.7415723069466506,
+          "recall": 0.7409807134753561,
+          "f1": 0.7407835149529338
+        },
+        "test_metrics": {
+          "accuracy": 0.7437733185439145,
+          "precision": 0.7444831909452667,
+          "recall": 0.7437733185439145,
+          "f1": 0.7435464842283331
+        }
+      },
+      "XGBoost": {
+        "best_params": {
+          "max_depth": 3,
+          "n_estimators": 100
+        },
+        "train_metrics": {
+          "accuracy": 0.7562586663305181,
+          "precision": 0.7572425335437721,
+          "recall": 0.7562586663305181,
+          "f1": 0.7560659248362642
+        },
+        "test_metrics": {
+          "accuracy": 0.7485126550368055,
+          "precision": 0.7493961065571252,
+          "recall": 0.7485126550368055,
+          "f1": 0.7483304355710397
+        }
+      }
+    },
+    "tfidf": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 100
+        },
+        "train_metrics": {
+          "accuracy": 0.9999747888566747,
+          "precision": 0.9999747901230572,
+          "recall": 0.9999747888566747,
+          "f1": 0.9999747888542709
+        },
+        "test_metrics": {
+          "accuracy": 0.9165070081677926,
+          "precision": 0.9165723931350612,
+          "recall": 0.9165070081677926,
+          "f1": 0.9165015198936787
+        }
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 1,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.9999243665700239,
+          "precision": 0.9999243678553785,
+          "recall": 0.9999243665700239,
+          "f1": 0.9999243665771389
+        },
+        "test_metrics": {
+          "accuracy": 0.9180195623676515,
+          "precision": 0.9182006430549283,
+          "recall": 0.9180195623676515,
+          "f1": 0.9180071310746831
+        }
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 0.1,
+          "solver": "lsqr"
+        },
+        "train_metrics": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "test_metrics": {
+          "accuracy": 0.9169103559544217,
+          "precision": 0.9170943706512702,
+          "recall": 0.9169103559544217,
+          "f1": 0.9168975468582676
+        }
+      }
+    },
+    "embedder": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 10
+        },
+        "train_metrics": {
+          "accuracy": 0.8935081305937225,
+          "precision": 0.8935349641477238,
+          "recall": 0.8935081305937225,
+          "f1": 0.8935080784751793
+        },
+        "test_metrics": {
+          "accuracy": 0.8864575980639307,
+          "precision": 0.8864861649762766,
+          "recall": 0.8864575980639307,
+          "f1": 0.8864574595227972
+        }
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 1,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.8936593974536745,
+          "precision": 0.8936868965554124,
+          "recall": 0.8936593974536745,
+          "f1": 0.8936593236450943
+        },
+        "test_metrics": {
+          "accuracy": 0.8863567611172734,
+          "precision": 0.8863894940894695,
+          "recall": 0.8863567611172734,
+          "f1": 0.8863564629892222
+        }
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 1,
+          "solver": "auto"
+        },
+        "train_metrics": {
+          "accuracy": 0.8881129459220976,
+          "precision": 0.8881690759109946,
+          "recall": 0.8881129459220976,
+          "f1": 0.8881116649827008
+        },
+        "test_metrics": {
+          "accuracy": 0.8811132398910961,
+          "precision": 0.8812071530660567,
+          "recall": 0.8811132398910961,
+          "f1": 0.8811097946144358
+        }
+      }
+    },
+    "custom_tfidf": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 100
+        },
+        "train_metrics": {
+          "accuracy": 0.9999747888566747,
+          "precision": 0.9999747901230572,
+          "recall": 0.9999747888566747,
+          "f1": 0.9999747888542709
+        },
+        "test_metrics": {
+          "accuracy": 0.9152969648079056,
+          "precision": 0.9153328291457288,
+          "recall": 0.9152969648079056,
+          "f1": 0.9152934505760126
+        }
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 1,
+          "loss": "hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.9928148241522753,
+          "precision": 0.9928164891193325,
+          "recall": 0.9928148241522753,
+          "f1": 0.9928147927221074
+        },
+        "test_metrics": {
+          "accuracy": 0.9144902692346476,
+          "precision": 0.9145730576857369,
+          "recall": 0.9144902692346476,
+          "f1": 0.9144834448047653
+        }
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 0.01,
+          "solver": "lsqr"
+        },
+        "train_metrics": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "test_metrics": {
+          "accuracy": 0.9143894322879903,
+          "precision": 0.9145685971879003,
+          "recall": 0.9143894322879903,
+          "f1": 0.9143764505318646
+        }
+      }
+    },
+    "custom_embedder": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 10
+        },
+        "train_metrics": {
+          "accuracy": 0.8952224883398462,
+          "precision": 0.8952414916574932,
+          "recall": 0.8952224883398462,
+          "f1": 0.895222667352013
+        },
+        "test_metrics": {
+          "accuracy": 0.8883735000504185,
+          "precision": 0.8884063194386207,
+          "recall": 0.8883735000504185,
+          "f1": 0.8883732072130158
+        }
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 0.1,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.8913651834110677,
+          "precision": 0.8913897096384875,
+          "recall": 0.8913651834110677,
+          "f1": 0.8913652037113208
+        },
+        "test_metrics": {
+          "accuracy": 0.88978521730362,
+          "precision": 0.8898575950813513,
+          "recall": 0.88978521730362,
+          "f1": 0.8897831776610281
+        }
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 1,
+          "solver": "auto"
+        },
+        "train_metrics": {
+          "accuracy": 0.8904827933946804,
+          "precision": 0.8904894334324229,
+          "recall": 0.8904827933946804,
+          "f1": 0.8904831793102488
+        },
+        "test_metrics": {
+          "accuracy": 0.8827266310376122,
+          "precision": 0.8827422814354444,
+          "recall": 0.8827266310376122,
+          "f1": 0.8827269076852986
+        }
+      }
+    }
+  }
+}
