@@ -115,7 +115,7 @@ def comparing_representations(clean_training):
     X_custom_train_df = X_custom_train.copy()
     X_custom_test_df = X_custom_test.copy()
 
-    if best_rep =="custom":
+    if "custom" in best_rep:
         importance_df = evaluate_feature_importance(
             model = best_estimator, 
             X = X_custom_test_df, 
