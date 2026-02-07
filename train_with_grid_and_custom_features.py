@@ -3,7 +3,6 @@ from sklearn.model_selection import GridSearchCV
 
 from sklearn.linear_model import RidgeClassifier, LogisticRegression
 from sklearn.svm import LinearSVC
-from xgboost import XGBClassifier
 
 from training_and_calculate_metrics import train_and_evaluate_model
 
@@ -20,9 +19,9 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowe
                                                     }
                                                 ),
 
-        "Linear SVM" : (LinearSVC(max_iter=20000, random_state=42), 
+        "Linear SVM" : (LinearSVC(max_iter=40000, random_state=42, class_weight="balanced"), 
                 {
-                    "C": [0.1,1], 
+                    "C": [0.01, 0.1,1], 
                     "loss": ['hinge', 'squared_hinge']
                 }),
 
@@ -43,10 +42,10 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowe
 
         grid = GridSearchCV(estimator = model, 
                             param_grid=param_grid, 
-                            scoring = "f1", 
+                            scoring = "f1_macro", 
                             n_jobs=-1, 
                             verbose=2, 
-                            refit='f1', 
+                            refit='f1_macro', 
                             cv=5)
         
             
