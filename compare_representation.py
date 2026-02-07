@@ -11,6 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import hstack, csr_matrix, issparse
 from sentence_transformers import SentenceTransformer
 
+from preprocess import preprocess_for_tfidf
 from preparation import training_data
 from train_with_grid_and_custom_features import train_with_grid_and_custom_features
 from feature_importance import evaluate_feature_importance, false_sentences
@@ -22,10 +23,13 @@ def comparing_representations(clean_training):
 
     X_text_train, X_text_test, X_custom_train, X_custom_test, y_train, y_test, scaler = training_data(clean_training)
     
+    X_text_train_tfidf = X_text_train.apply(preprocess_for_tfidf)
+    X_text_test_tfidf = X_text_test.apply(preprocess_for_tfidf)
+
     #TF-IDF
     vectorizer = TfidfVectorizer(ngram_range=(1,3), min_df=3, max_df = 0.9, max_features=30000, sublinear_tf=True)
-    X_train_tfidf = vectorizer.fit_transform(X_text_train)
-    X_test_tfidf = vectorizer.transform(X_text_test)
+    X_train_tfidf = vectorizer.fit_transform(X_text_train_tfidf)
+    X_test_tfidf = vectorizer.transform(X_text_test_tfidf)
 
     X_custom_train_sparse = csr_matrix(X_custom_train)
     X_custom_test_sparse = csr_matrix(X_custom_test)

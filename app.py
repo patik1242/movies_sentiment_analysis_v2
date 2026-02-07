@@ -1,7 +1,7 @@
 import flask
 import pickle
 
-from preprocess import preprocess
+from preprocess import preprocess_base
 
 app = flask.Flask(__name__, template_folder='templates')
 
@@ -19,7 +19,7 @@ def index():
     if flask.request.method =="POST":
         text = flask.request.form["sentiment"]
 
-        clean_text = preprocess(text)
+        clean_text = preprocess_base(text)
         X = vectorizer.transform([clean_text])
 
         pred = model.predict(X)[0]

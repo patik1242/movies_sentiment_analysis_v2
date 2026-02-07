@@ -1,5 +1,5 @@
 import pandas as pd
-from preprocess import preprocess
+from preprocess import preprocess_base, preprocess_for_tfidf
 
 
 def load_and_clean_data():
@@ -39,7 +39,7 @@ def load_and_clean_data():
 
     clean_training = training_dataset.drop_duplicates()
     clean_training = clean_training.reset_index(drop=True)
-    clean_training["review"] = clean_training["review"].apply(preprocess)
+    clean_training["review"] = clean_training["review"].apply(preprocess_base)
     clean_training = clean_training[clean_training["review"].str.strip()!=""]
     clean_training["sentiment"] = clean_training["sentiment"].map({
         "negative":0,

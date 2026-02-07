@@ -36,7 +36,7 @@ def calculate_metrics(y_true, y_pred, model_name, split):
         plt.title(title)
         filename = f"{title}.png"
         i=1
-        while filename.exists():
+        while os.path.exists(filename):
             filename = charts_dir/ f"{title}_{i}.png"
             i+=1
         plt.savefig(filename)
