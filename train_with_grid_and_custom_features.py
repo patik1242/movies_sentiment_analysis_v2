@@ -7,13 +7,13 @@ from xgboost import XGBClassifier
 
 from training_and_calculate_metrics import train_and_evaluate_model
 
-def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowed_models=None):    
+def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowed_models=None, texts_test=None):    
    
     #Modele z parametrami
     classifiers = {
         "Logistic Regression" : (LogisticRegression(max_iter = 5000, 
                                                 random_state=42, 
-                                                solver="lbfgs",
+                                                solver="saga",
                                                 class_weight="balanced",
                                                 ),
                                                 {"C": [10, 100],
@@ -28,13 +28,7 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowe
 
         "RidgeClassifier": (RidgeClassifier(class_weight="balanced"), 
                             {"alpha": [0.01, 0.1, 1, 10], 
-                            "solver": ['auto', 'lsqr']}),
-
-        "XGBoost": (XGBClassifier(objective = "binary:logistic", random_state = 42, n_jobs = -1, verbosity = 0, eval_metric = "logloss"), 
-                    {
-                        "max_depth": [2,3,4], 
-                        "n_estimators": [100,200]
-                    })
+                            "solver": ['auto', 'lsqr']})
     }
 
     results_imdb = {}
@@ -61,7 +55,7 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowe
         best_model = grid.best_estimator_
 
         train_metrics, test_metrics = train_and_evaluate_model(
-            best_model, X_train_model, X_test_model, y_train, y_test, model_name
+            best_model, X_train_model, X_test_model, y_train, y_test, model_name, texts_test=texts_test
         )
         
         results_imdb[model_name] = {"best_params": grid.best_params_, 'estimator': grid.best_estimator_, 'train': train_metrics, 'test': test_metrics} 

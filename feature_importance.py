@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.inspection import permutation_importance
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 def evaluate_feature_importance(model, X, y=None, method="auto"):
     
@@ -40,3 +41,34 @@ def evaluate_feature_importance(model, X, y=None, method="auto"):
         .sort_values("importance", ascending=False)
         .reset_index(drop=True)
     )
+
+def false_sentences(texts_test, y_pred, y_test, name="model"):
+    charts_dir = Path("charts")
+    charts_dir.mkdir(exist_ok=True)
+
+    fp_mask = (y_pred==1) & (y_test==0)
+    fn_mask = (y_pred==0) & (y_test==1)
+    tp = np.sum((y_pred==1) & (y_test==1))
+    tn = np.sum((y_pred==0) & (y_test==0))
+
+    fp = np.sum(fp_mask)
+    fn = np.sum(fn_mask)
+
+    df = pd.DataFrame({
+        "text": texts_test,
+        "true": y_test, 
+        "pred": y_pred
+    })
+
+    df[fp_mask].to_csv(charts_dir/f"{name}_false_positive.csv", index=False)
+    df[fn_mask].to_csv(charts_dir/f"{name}_false_negative.csv", index=False)
+
+    labels = ["True Positive", "True Negative", "False Positive", "False Negative"]
+    values = [tp, tn, fp, fn]
+
+    plt.figure(figsize=(6,6))
+    plt.pie(values, labels=labels, autopct='%1.1f%%')
+    plt.title("Types of errors")
+    plt.savefig(charts_dir /f"{name}_error_pie.png")
+    plt.close()
+

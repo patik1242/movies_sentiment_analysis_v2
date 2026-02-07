@@ -1,5 +1,5 @@
 {
-  "model_name": "Linear SVM",
-  "representation": "tfidf",
-  "timestamp": "2026-02-01_14:05:55"
+  "model_name": "RidgeClassifier",
+  "representation": "all",
+  "timestamp": "2026-02-03_02:07:39"
 }

@@ -17,8 +17,8 @@ def training_data(clean_training):
     X_custom_test = X_text_test.apply(extract_features).apply(pd.Series)
 
     #Standaryzacja cech numerycznych
+    #Skalowanie cech, aby były porównywane liczbowo 
     scaler = StandardScaler()
-
 
     X_custom_train = pd.DataFrame(
         scaler.fit_transform(X_custom_train), 
