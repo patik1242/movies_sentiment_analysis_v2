@@ -11,13 +11,13 @@ def ensure_nltk():
     if nltk_ready:
         return
     nltk.download("wordnet", quiet=True)
-    #nltk.download("stopwords", quiet=True)
+    nltk.download("stopwords", quiet=True)
     nltk.download("omw-1.4", quiet=True)
-    #stops = set(stopwords.words('english'))
+    stops = set(stopwords.words('english'))
 
-    #stops -= {"not", "no", "nor", "never",
-    #"none", "nobody", "nothing", "nowhere",
-    #"neither", "without", "hardly", "barely", "scarcely"}
+    stops -= {"not", "no", "nor", "never",
+    "none", "nobody", "nothing", "nowhere",
+    "neither", "without", "hardly", "barely", "scarcely"}
 
     nltk_ready=True
 
@@ -45,8 +45,11 @@ def preprocess_for_tfidf(text):
 
     text = preprocess_base(text)
 
+    #usunięcie wielokrotnych znaków interpunkcyjnych
+    text = re.sub(r"([!?])\1{1,}", r"\1", text)
+
     words = text.split()
-    #words = [w for w in words if w not in stops]
+    words = [w for w in words if w not in stops]
     words_l = [wnl.lemmatize(w) for w in words]
 
     return " ".join(words_l) 

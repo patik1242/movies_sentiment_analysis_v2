@@ -49,7 +49,7 @@ def calculate_metrics(y_true, y_pred, model_name, split):
         'recall_macro': recall_macro,
         'precision_weighted': precision_weighted,
         'recall_weighted': recall_weighted,
-        'f1_macro': f1_macro,
+        'f1': f1_macro,
         'f1_weighted': f1_weighted
     }
 

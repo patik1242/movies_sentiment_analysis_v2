@@ -27,7 +27,7 @@ def comparing_representations(clean_training):
     X_text_test_tfidf = X_text_test.apply(preprocess_for_tfidf)
 
     #TF-IDF
-    vectorizer = TfidfVectorizer(ngram_range=(1,3), min_df=3, max_df = 0.9, max_features=30000, sublinear_tf=True)
+    vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=1, sublinear_tf=True)
     X_train_tfidf = vectorizer.fit_transform(X_text_train_tfidf)
     X_test_tfidf = vectorizer.transform(X_text_test_tfidf)
 
@@ -199,7 +199,8 @@ def save_best_model(best_estimator, best_rep, best_model_name, vectorizer = None
     model_info = {
         "model_name": best_model_name,
         "representation": best_rep,
-        "timestamp": datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+        "timestamp": datetime.now().strftime("%Y-%m-%d_%H:%M:%S"),
+        "embedder_name": "all-MiniLM-L6-v2"
     }
 
     with open(models_dir / "best_model_info.json", "w") as f:
