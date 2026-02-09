@@ -7,14 +7,14 @@ from pathlib import Path
 import pickle
 from pathlib import Path
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from scipy.sparse import hstack, csr_matrix, issparse
 from sentence_transformers import SentenceTransformer
 
-from preprocess import preprocess_for_tfidf
+from preprocess import preprocess_for_vector
 from preparation import training_data
 from train_with_grid_and_custom_features import train_with_grid_and_custom_features
-from feature_importance import evaluate_feature_importance, false_sentences
+from feature_importance import evaluate_feature_importance
 
 
 def comparing_representations(clean_training):
@@ -23,13 +23,13 @@ def comparing_representations(clean_training):
 
     X_text_train, X_text_test, X_custom_train, X_custom_test, y_train, y_test, scaler = training_data(clean_training)
     
-    X_text_train_tfidf = X_text_train.apply(preprocess_for_tfidf)
-    X_text_test_tfidf = X_text_test.apply(preprocess_for_tfidf)
+    X_text_train_vector = X_text_train.apply(preprocess_for_vector)
+    X_text_test_vector = X_text_test.apply(preprocess_for_vector)
 
     #TF-IDF
     vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=1, sublinear_tf=True)
-    X_train_tfidf = vectorizer.fit_transform(X_text_train_tfidf)
-    X_test_tfidf = vectorizer.transform(X_text_test_tfidf)
+    X_train_tfidf = vectorizer.fit_transform(X_text_train_vector)
+    X_test_tfidf = vectorizer.transform(X_text_test_vector)
 
     X_custom_train_sparse = csr_matrix(X_custom_train)
     X_custom_test_sparse = csr_matrix(X_custom_test)
@@ -37,6 +37,15 @@ def comparing_representations(clean_training):
     #Połączenie TF-IDF + custom 
     X_train_custom_tfidf = hstack([X_train_tfidf, X_custom_train_sparse])
     X_test_custom_tfidf = hstack([X_test_tfidf, X_custom_test_sparse])
+
+    #Bag of Words
+    bow = CountVectorizer()
+    X_train_bow = bow.fit_transform(X_text_train_vector)
+    X_test_bow = bow.transform(X_text_test_vector)
+
+    #Połączenie BoW + custom 
+    X_train_custom_bow = hstack([X_train_bow, X_custom_train_sparse])
+    X_test_custom_bow = hstack([X_test_bow, X_custom_test_sparse])
 
     #Embedder
     try:
@@ -59,17 +68,12 @@ def comparing_representations(clean_training):
         np.save("X_embed_train.npy", X_train_embed)
         np.save("X_embed_test.npy", X_test_embed)
         
-
-    #Połączenie embedder + custom 
-    X_train_custom_embed = np.hstack([X_train_embed, X_custom_train])
-    X_test_custom_embed = np.hstack([X_test_embed, X_custom_test])
-
-
     data = {"custom": [X_custom_train_sparse, X_custom_test_sparse], #sparse
             "tfidf": [X_train_tfidf, X_test_tfidf], #sparse
             "embedder": [X_train_embed, X_test_embed], #dense 
-            "custom_tfidf": [X_train_custom_tfidf, X_test_custom_tfidf], #sparse
-            "custom_embedder": [X_train_custom_embed, X_test_custom_embed]} #dense
+            "bow": [X_train_bow, X_test_bow],
+            "custom_bow": [X_train_custom_bow, X_test_custom_bow],
+            "custom_tfidf": [X_train_custom_tfidf, X_test_custom_tfidf]}    
     
     all_results_imdb = {}
     for rep_model, (X_tr, X_te) in data.items():
