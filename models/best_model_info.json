@@ -1,5 +1,6 @@
 {
-  "model_name": "RidgeClassifier",
-  "representation": "all",
-  "timestamp": "2026-02-03_02:07:39"
+  "model_name": "Linear SVM",
+  "representation": "tfidf",
+  "timestamp": "2026-02-09_14:15:09",
+  "embedder_name": "all-MiniLM-L6-v2"
 }
