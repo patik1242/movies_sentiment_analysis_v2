@@ -1,5 +1,5 @@
 import pandas as pd
-from preprocess import preprocess_base, preprocess_for_tfidf
+from preprocess import preprocess_base
 
 
 def load_and_clean_data():
