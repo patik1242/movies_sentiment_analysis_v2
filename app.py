@@ -1,8 +1,7 @@
 import flask, pickle, json, os
-import numpy as np
 import pandas as pd
+from scipy.sparse import hstack, csr_matrix
 from sentence_transformers import SentenceTransformer
-from sklearn.preprocessing import StandardScaler
 from preprocess import preprocess_base, preprocess_for_vector
 from dictionaries_and_extracting_features import extract_features
 
@@ -18,7 +17,7 @@ with open("models/best_model_info.json", "r") as f:
 
 rep = model_info["representation"].lower()
 
-preprocess_func = preprocess_for_vector if "tfidf" in rep else preprocess_base
+preprocess_func = preprocess_for_vector if ("tfidf" in rep or "bow" in rep) else preprocess_base
 
 if os.path.exists("models/vectorizer.pkl"):
     with open("models/vectorizer.pkl", "rb") as f:
@@ -32,14 +31,12 @@ if "embedder" in rep:
     embedder = SentenceTransformer(model_info["embedder_name"])
         
 def custom_features(text):
+    if not scaler:
+        raise ValueError("There is no scaler")
     features = extract_features(text)
     X = pd.DataFrame([features])
-    X_scaled = pd.DataFrame(
-        scaler.transform(X), 
-        columns = X.columns, 
-        index = X.index
-    )
-    return X_scaled.values
+    X_scaled = scaler.transform(X)
+    return X_scaled
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -47,19 +44,28 @@ def index():
 
     if flask.request.method =="POST":
         text = flask.request.form["sentiment"]
-
         clean_text = preprocess_func(text)
 
-        if "custom" in model_info["representation"]:
-            X = custom_features(clean_text)
+        combination = []
+
+        if "custom" in rep:
+            X_cus = custom_features(clean_text)
+            combination.append(csr_matrix(X_cus))
+                
+        if "embedder" in rep:
+            X_emb = embedder.encode([clean_text])
+            combination.append(csr_matrix(X_emb))
         
-        if "embedder" in model_info["representation"]:
-            X = embedder.encode([clean_text])
-        else: 
-            X = vectorizer.transform([clean_text])
+        if ("tfidf" in rep) or ("bow" in rep):
+            X_vec = vectorizer.transform([clean_text])
+            combination.append(X_vec)
+
+        if len(combination)==0:
+            raise RuntimeError("There is no part of rep in model_info")
+
+        X = combination[0] if len(combination) == 1 else hstack(combination)
 
         pred = model.predict(X)[0]
-
         sentiment = "Positive" if pred==1 else "Negative"
 
     return flask.render_template("index.html", sentiment=sentiment)

@@ -1,12 +1,12 @@
 
+import time 
 from sklearn.model_selection import GridSearchCV
-
-from sklearn.linear_model import RidgeClassifier, LogisticRegression
 from sklearn.svm import LinearSVC
+from sklearn.linear_model import LogisticRegression, RidgeClassifier
 
 from training_and_calculate_metrics import train_and_evaluate_model
 
-def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowed_models=None, texts_test=None):    
+def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowed_models=None, texts_test=None, dataset=None):    
    
     #Modele z parametrami
     classifiers = {
@@ -48,15 +48,18 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, allowe
                             refit='f1_macro', 
                             cv=5)
         
-            
+        start = time.perf_counter()            
         grid.fit(X_train_model, y_train)
+        train_time = time.perf_counter() - start 
 
         best_model = grid.best_estimator_
 
         train_metrics, test_metrics = train_and_evaluate_model(
-            best_model, X_train_model, X_test_model, y_train, y_test, model_name, texts_test=texts_test
+            best_model, X_train_model, X_test_model, y_train, y_test, model_name, texts_test=texts_test, dataset=dataset
         )
         
-        results_imdb[model_name] = {"best_params": grid.best_params_, 'estimator': grid.best_estimator_, 'train': train_metrics, 'test': test_metrics} 
+        results_imdb[model_name] = {"best_params": grid.best_params_, 'estimator': grid.best_estimator_, 
+                                    'train': train_metrics, 'test': test_metrics, 
+                                    "train_time_s": train_time} 
     
     return results_imdb

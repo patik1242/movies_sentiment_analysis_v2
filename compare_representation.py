@@ -1,10 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import json
-from datetime import datetime
-from pathlib import Path
-import pickle
 from pathlib import Path
 
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
@@ -14,7 +10,8 @@ from sentence_transformers import SentenceTransformer
 from preprocess import preprocess_for_vector
 from preparation import training_data
 from train_with_grid_and_custom_features import train_with_grid_and_custom_features
-from feature_importance import evaluate_feature_importance
+from feature_importance import evaluate_feature_importance, mcnemar
+from json_files import save_results_to_json, save_best_model
 
 
 def comparing_representations(clean_training):
@@ -83,14 +80,19 @@ def comparing_representations(clean_training):
         "| test:",  type(X_te), "sparse?" , issparse(X_te),
         "| shape:", X_tr.shape)
 
-        allowed_models = ["Logistic Regression", "Linear SVM", "RidgeClassifier"]
+        allowed_models = ["Linear SVM"]
 
         results_imdb = train_with_grid_and_custom_features(
-            X_tr, X_te, y_train, y_test, allowed_models=allowed_models, texts_test=X_text_test)
+            X_tr, X_te, y_train, y_test, allowed_models=allowed_models, texts_test=X_text_test, dataset=rep_model)
 
+        for model_name in results_imdb:
+            results_imdb[model_name]["n_features"] = X_tr.shape[1]
 
         all_results_imdb[rep_model] = results_imdb
-    
+        best_est = max(results_imdb.values(), key=lambda x: x["test"]["f1"])["estimator"]
+        preds[rep_model] = best_est.predict(X_te)
+
+    preds = {}    
     best_f1 = -1
     best_model_name = None
     best_estimator = None
@@ -136,7 +138,13 @@ def comparing_representations(clean_training):
         "f1": best_f1
     }
 
-    save_results_to_json(all_results_imdb, best_f1_per_rep, best_model_info)
+    rep_sorted = sorted(best_f1_per_rep.items(), key=lambda x: x[1], reverse=True)
+    first_rep = rep_sorted[0][0]
+    second_rep = rep_sorted[1][0]
+
+    mcnemar_results = mcnemar(preds[first_rep], preds[second_rep], y_test)
+
+    save_results_to_json(all_results_imdb, best_f1_per_rep, best_model_info, second_rep, mcnemar_results)
     save_best_model(
         best_estimator= best_estimator, 
         best_rep = best_rep, 
@@ -156,66 +164,3 @@ def comparing_representations(clean_training):
     plt.tight_layout()
     plt.savefig(charts_dir /"Best_test_F1_per_representation.png")
     plt.close()
-
-
-def save_results_to_json(all_results_imdb, best_f1_per_rep, best_model_info):
-    results_dir = Path("results")
-    results_dir.mkdir(exist_ok=True)
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    results_summary = {
-        "timestamp": timestamp, 
-        "best_model": {
-            "name" : best_model_info["name"],
-            "representation": best_model_info["representation"],
-            "f1_score": best_model_info["f1"]
-        }, 
-        "best_f1_per_representation": best_f1_per_rep, 
-        "all_models": {}
-    }
-
-    for rep, models in all_results_imdb.items():
-        results_summary["all_models"][rep] = {}
-        for model_name, result in models.items():
-            results_summary["all_models"][rep][model_name] = {
-                "best_params": result["best_params"], 
-                "train_metrics": result["train"],
-                "test_metrics": result["test"]
-            }
-    
-    output_path = results_dir / f"results_{timestamp}.json"
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(results_summary, f, indent=2, ensure_ascii=False)
-    
-    print(f"\n Wyniki zapisane do: {output_path}")
-
-    return output_path
-
-
-def save_best_model(best_estimator, best_rep, best_model_name, vectorizer = None, scaler = None ):
-    models_dir = Path("models")
-    models_dir.mkdir(exist_ok=True)
-
-    with open(models_dir/"best_model.pkl", "wb") as f:
-        pickle.dump(best_estimator, f)
-    
-    model_info = {
-        "model_name": best_model_name,
-        "representation": best_rep,
-        "timestamp": datetime.now().strftime("%Y-%m-%d_%H:%M:%S"),
-        "embedder_name": "all-MiniLM-L6-v2"
-    }
-
-    with open(models_dir / "best_model_info.json", "w") as f:
-        json.dump(model_info, f, indent=2)
-    
-    if vectorizer is not None:
-        with open(models_dir/"vectorizer.pkl", "wb") as f:
-            pickle.dump(vectorizer, f)
-
-    if scaler is not None:
-        with open(models_dir/"scaler.pkl", "wb") as f:
-            pickle.dump(scaler, f)
-    
-    print(f"Model zapisany w {models_dir}")
