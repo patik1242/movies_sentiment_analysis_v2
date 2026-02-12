@@ -1,5 +1,5 @@
 import json, pickle
-import pathlib as Path
+from pathlib import Path
 from datetime import datetime
 
 def save_results_to_json(all_results_imdb, best_f1_per_rep, best_model_info, second_rep, mcnemar_result):

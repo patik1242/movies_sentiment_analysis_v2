@@ -17,12 +17,13 @@ from json_files import save_results_to_json, save_best_model
 def comparing_representations(clean_training):
     charts_dir = Path("charts")
     charts_dir.mkdir(exist_ok=True)
-
+    
+    preds = {}
     X_text_train, X_text_test, X_custom_train, X_custom_test, y_train, y_test, scaler = training_data(clean_training)
     
     X_text_train_vector = X_text_train.apply(preprocess_for_vector)
     X_text_test_vector = X_text_test.apply(preprocess_for_vector)
-
+    
     #TF-IDF
     vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=1, sublinear_tf=True)
     X_train_tfidf = vectorizer.fit_transform(X_text_train_vector)
@@ -80,7 +81,7 @@ def comparing_representations(clean_training):
         "| test:",  type(X_te), "sparse?" , issparse(X_te),
         "| shape:", X_tr.shape)
 
-        allowed_models = ["Linear SVM"]
+        allowed_models = ["Linear SVM", "Logistic Regression", "RidgeClassifier"]
 
         results_imdb = train_with_grid_and_custom_features(
             X_tr, X_te, y_train, y_test, allowed_models=allowed_models, texts_test=X_text_test, dataset=rep_model)
@@ -91,8 +92,7 @@ def comparing_representations(clean_training):
         all_results_imdb[rep_model] = results_imdb
         best_est = max(results_imdb.values(), key=lambda x: x["test"]["f1"])["estimator"]
         preds[rep_model] = best_est.predict(X_te)
-
-    preds = {}    
+   
     best_f1 = -1
     best_model_name = None
     best_estimator = None

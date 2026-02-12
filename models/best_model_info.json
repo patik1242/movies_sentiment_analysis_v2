@@ -1,6 +1,6 @@
 {
   "model_name": "Linear SVM",
   "representation": "tfidf",
-  "timestamp": "2026-02-10_00:31:16",
+  "timestamp": "2026-02-12_19:33:03",
   "embedder_name": "all-MiniLM-L6-v2"
 }

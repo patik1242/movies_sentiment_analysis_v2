@@ -61,7 +61,7 @@ def train_and_evaluate_model(model, X_train, X_test, y_train, y_test, model_name
     train_metrics["predict_time_s"] = train_pred_time
     test_metrics["predict_time_s"] = test_pred_time
     
-    false_sentences(texts_test, y_test_pred, y_test, mname = f"{model_name}_{dataset}")
+    false_sentences(texts_test, y_test_pred, y_test, name = f"{model_name}_{dataset}")
 
     return train_metrics, test_metrics
 
