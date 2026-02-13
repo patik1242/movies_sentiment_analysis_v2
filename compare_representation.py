@@ -25,7 +25,7 @@ def comparing_representations(clean_training):
     X_text_test_vector = X_text_test.apply(preprocess_for_vector)
     
     #TF-IDF
-    vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=1, sublinear_tf=True)
+    vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=3, max_df = 0.95, max_features=40000, sublinear_tf=True)
     X_train_tfidf = vectorizer.fit_transform(X_text_train_vector)
     X_test_tfidf = vectorizer.transform(X_text_test_vector)
 
