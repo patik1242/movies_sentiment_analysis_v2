@@ -9,7 +9,7 @@ from sentence_transformers import SentenceTransformer
 
 from preprocess import preprocess_for_vector
 from preparation import training_data
-from train_with_grid_and_custom_features import train_with_grid_and_custom_features
+from train_model import train_model
 from feature_importance import evaluate_feature_importance, mcnemar
 from json_files import save_results_to_json, save_best_model
 
@@ -25,7 +25,7 @@ def comparing_representations(clean_training):
     X_text_test_vector = X_text_test.apply(preprocess_for_vector)
     
     #TF-IDF
-    vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=1, sublinear_tf=True)
+    vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=3, max_df = 0.95, max_features=40000, sublinear_tf=True)
     X_train_tfidf = vectorizer.fit_transform(X_text_train_vector)
     X_test_tfidf = vectorizer.transform(X_text_test_vector)
 
@@ -81,9 +81,9 @@ def comparing_representations(clean_training):
         "| test:",  type(X_te), "sparse?" , issparse(X_te),
         "| shape:", X_tr.shape)
 
-        allowed_models = ["Linear SVM", "Logistic Regression", "RidgeClassifier"]
+        allowed_models = ["Linear SVM"]
 
-        results_imdb = train_with_grid_and_custom_features(
+        results_imdb = train_model(
             X_tr, X_te, y_train, y_test, allowed_models=allowed_models, texts_test=X_text_test, dataset=rep_model)
 
         for model_name in results_imdb:
