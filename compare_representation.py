@@ -4,12 +4,12 @@ import pandas as pd
 from pathlib import Path
 
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from scipy.sparse import hstack, csr_matrix, issparse
+from scipy.sparse import csr_matrix, issparse
 from sentence_transformers import SentenceTransformer
 
 from preprocess import preprocess_for_vector
 from preparation import training_data
-from train_model import train_model
+from train_model import train_model, train_with_grid_and_custom_features
 from feature_importance import evaluate_feature_importance, mcnemar
 from json_files import save_results_to_json, save_best_model
 
@@ -25,25 +25,17 @@ def comparing_representations(clean_training):
     X_text_test_vector = X_text_test.apply(preprocess_for_vector)
     
     #TF-IDF
-    vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=3, max_df = 0.95, max_features=40000, sublinear_tf=True)
-    X_train_tfidf = vectorizer.fit_transform(X_text_train_vector)
-    X_test_tfidf = vectorizer.transform(X_text_test_vector)
+    #vectorizer = TfidfVectorizer(ngram_range=(1,2), min_df=3, max_df = 0.95, max_features=40000, sublinear_tf=True)
+    #X_train_tfidf = vectorizer.fit_transform(X_text_train_vector)
+    #X_test_tfidf = vectorizer.transform(X_text_test_vector)
 
     X_custom_train_sparse = csr_matrix(X_custom_train)
     X_custom_test_sparse = csr_matrix(X_custom_test)
 
-    #Połączenie TF-IDF + custom 
-    X_train_custom_tfidf = hstack([X_train_tfidf, X_custom_train_sparse])
-    X_test_custom_tfidf = hstack([X_test_tfidf, X_custom_test_sparse])
-
     #Bag of Words
-    bow = CountVectorizer()
-    X_train_bow = bow.fit_transform(X_text_train_vector)
-    X_test_bow = bow.transform(X_text_test_vector)
-
-    #Połączenie BoW + custom 
-    X_train_custom_bow = hstack([X_train_bow, X_custom_train_sparse])
-    X_test_custom_bow = hstack([X_test_bow, X_custom_test_sparse])
+    #bow = CountVectorizer()
+    #X_train_bow = bow.fit_transform(X_text_train_vector)
+    #X_test_bow = bow.transform(X_text_test_vector)
 
     #Embedder
     try:
@@ -67,11 +59,9 @@ def comparing_representations(clean_training):
         np.save("X_embed_test.npy", X_test_embed)
         
     data = {"custom": [X_custom_train_sparse, X_custom_test_sparse], #sparse
-            "tfidf": [X_train_tfidf, X_test_tfidf], #sparse
+            "tfidf": [X_text_train_vector, X_text_test_vector], #sparse
             "embedder": [X_train_embed, X_test_embed], #dense 
-            "bow": [X_train_bow, X_test_bow],
-            "custom_bow": [X_train_custom_bow, X_test_custom_bow],
-            "custom_tfidf": [X_train_custom_tfidf, X_test_custom_tfidf]}    
+            "bow": [X_text_train_vector, X_text_test_vector]}    
     
     all_results_imdb = {}
     for rep_model, (X_tr, X_te) in data.items():
@@ -81,13 +71,19 @@ def comparing_representations(clean_training):
         "| test:",  type(X_te), "sparse?" , issparse(X_te),
         "| shape:", X_tr.shape)
 
-        allowed_models = ["Linear SVM"]
-
-        results_imdb = train_model(
-            X_tr, X_te, y_train, y_test, allowed_models=allowed_models, texts_test=X_text_test, dataset=rep_model)
+        if rep_model in ["tfidf", "bow"]:
+            results_imdb = train_model(
+                X_tr, X_te, y_train, y_test, vectorizer_type = rep_model, texts_test=X_text_test, dataset=rep_model)
+        else:
+            results_imdb = train_with_grid_and_custom_features(
+                X_tr, X_te, y_train, y_test,texts_test=X_text_test, dataset=rep_model)
 
         for model_name in results_imdb:
-            results_imdb[model_name]["n_features"] = X_tr.shape[1]
+            if rep_model in ["tfidf", "bow"]:
+                est = results_imdb[model_name]["estimator"]
+                results_imdb[model_name]["n_features"] = est.named_steps["kbest"].k
+            else:
+                results_imdb[model_name]["n_features"] = X_tr.shape[1]
 
         all_results_imdb[rep_model] = results_imdb
         best_est = max(results_imdb.values(), key=lambda x: x["test"]["f1"])["estimator"]
@@ -149,7 +145,7 @@ def comparing_representations(clean_training):
         best_estimator= best_estimator, 
         best_rep = best_rep, 
         best_model_name = best_model_name, 
-        vectorizer = vectorizer if "tfidf" in best_rep else None, 
+        vectorizer = None, 
         scaler = scaler if "custom" in best_rep else None
     )
     
