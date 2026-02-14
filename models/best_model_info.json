@@ -1,6 +1,6 @@
 {
-  "model_name": "Linear SVM",
-  "representation": "tfidf",
-  "timestamp": "2026-02-12_19:33:03",
+  "model_name": "Logistic Regression",
+  "representation": "custom_tfidf",
+  "timestamp": "2026-02-14_13:01:47",
   "embedder_name": "all-MiniLM-L6-v2"
 }

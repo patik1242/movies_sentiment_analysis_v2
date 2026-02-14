@@ -1,0 +1,430 @@
+{
+  "timestamp": "20260214_130147",
+  "best_model": {
+    "name": "Logistic Regression",
+    "representation": "custom_tfidf",
+    "f1_score": 0.9113606321919289
+  },
+  "best_f1_per_representation": {
+    "custom": 0.7466968456459095,
+    "tfidf": 0.9090324122473387,
+    "embedder": 0.8214098573198232,
+    "bow": 0.8970358287815088,
+    "custom_bow": 0.8977403050023857,
+    "custom_tfidf": 0.9113606321919289
+  },
+  "all_models": {
+    "custom": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 10
+        },
+        "train_metrics": {
+          "accuracy": 0.7435774612378672,
+          "precision_macro": 0.7435875825149216,
+          "recall_macro": 0.74358776459133,
+          "f1": 0.7435774605859367,
+          "predict_time_s": 0.0018599999602884054
+        },
+        "test_metrics": {
+          "accuracy": 0.7466975899969749,
+          "precision_macro": 0.7466981769020024,
+          "recall_macro": 0.7467015884404292,
+          "f1": 0.7466968456459095,
+          "predict_time_s": 0.42073250003159046
+        },
+        "n_features": 15,
+        "train_time_s": 12.773157999967225
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 0.1,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.7423169040715997,
+          "precision_macro": 0.7425154949066903,
+          "recall_macro": 0.742258811907397,
+          "f1": 0.7422310239082952,
+          "predict_time_s": 0.0021968999644741416
+        },
+        "test_metrics": {
+          "accuracy": 0.7453867096904305,
+          "precision_macro": 0.7456221580983051,
+          "recall_macro": 0.7453248505880085,
+          "f1": 0.7452912355581234,
+          "predict_time_s": 0.0006796999368816614
+        },
+        "n_features": 15,
+        "train_time_s": 10.755939100054093
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 0.01,
+          "solver": "auto"
+        },
+        "train_metrics": {
+          "accuracy": 0.7411319803353082,
+          "precision_macro": 0.7417671625762985,
+          "recall_macro": 0.7410315378698416,
+          "f1": 0.7409061636883945,
+          "predict_time_s": 0.002188200014643371
+        },
+        "test_metrics": {
+          "accuracy": 0.744781688010487,
+          "precision_macro": 0.7455315139478331,
+          "recall_macro": 0.7446746735387642,
+          "f1": 0.7445288219909822,
+          "predict_time_s": 0.0007611999753862619
+        },
+        "n_features": 15,
+        "train_time_s": 2.3078575000399724
+      }
+    },
+    "tfidf": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 10
+        },
+        "train_metrics": {
+          "accuracy": 0.9933190470187823,
+          "precision_macro": 0.9933223558476845,
+          "recall_macro": 0.9933163956806479,
+          "f1": 0.9933189154789195,
+          "predict_time_s": 0.019778899964876473
+        },
+        "test_metrics": {
+          "accuracy": 0.9089442371684986,
+          "precision_macro": 0.9090240755929191,
+          "recall_macro": 0.9089192674968825,
+          "f1": 0.9089349775952338,
+          "predict_time_s": 0.08106320002116263
+        },
+        "n_features": 40000,
+        "train_time_s": 52.364379700040445
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 1,
+          "loss": "hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.9748897012479516,
+          "precision_macro": 0.9749216328678796,
+          "recall_macro": 0.974876845720087,
+          "f1": 0.974888440955314,
+          "predict_time_s": 0.020578700001351535
+        },
+        "test_metrics": {
+          "accuracy": 0.9090450741151558,
+          "precision_macro": 0.9091694802705943,
+          "recall_macro": 0.9090137100296993,
+          "f1": 0.9090324122473387,
+          "predict_time_s": 0.0048538000555709004
+        },
+        "n_features": 40000,
+        "train_time_s": 18.540560699999332
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 1,
+          "solver": "auto"
+        },
+        "train_metrics": {
+          "accuracy": 0.9864616160342872,
+          "precision_macro": 0.9864798194875164,
+          "recall_macro": 0.9864528067458209,
+          "f1": 0.9864611203669591,
+          "predict_time_s": 0.020100499968975782
+        },
+        "test_metrics": {
+          "accuracy": 0.9065241504487244,
+          "precision_macro": 0.9066446948262976,
+          "recall_macro": 0.9064931274957924,
+          "f1": 0.9065113591630631,
+          "predict_time_s": 0.0050333000253885984
+        },
+        "n_features": 40000,
+        "train_time_s": 51.46245940006338
+      }
+    },
+    "embedder": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 10
+        },
+        "train_metrics": {
+          "accuracy": 0.827101979074751,
+          "precision_macro": 0.8271111714624635,
+          "recall_macro": 0.8270898792656427,
+          "f1": 0.8270950553476961,
+          "predict_time_s": 0.037999499938450754
+        },
+        "test_metrics": {
+          "accuracy": 0.8198043763234849,
+          "precision_macro": 0.8198126242890433,
+          "recall_macro": 0.8197924623307702,
+          "f1": 0.8197973328973086,
+          "predict_time_s": 0.0039025000296533108
+        },
+        "n_features": 384,
+        "train_time_s": 26.201011699973606
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 1,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.827101979074751,
+          "precision_macro": 0.8271188952212635,
+          "recall_macro": 0.827086659261751,
+          "f1": 0.8270930524506572,
+          "predict_time_s": 0.10949159995652735
+        },
+        "test_metrics": {
+          "accuracy": 0.8214177674700011,
+          "precision_macro": 0.8214293936667162,
+          "recall_macro": 0.8214043710379486,
+          "f1": 0.8214098573198232,
+          "predict_time_s": 0.0156367999734357
+        },
+        "n_features": 384,
+        "train_time_s": 43.37268709996715
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 0.1,
+          "solver": "lsqr"
+        },
+        "train_metrics": {
+          "accuracy": 0.8255640993319047,
+          "precision_macro": 0.8255816110941165,
+          "recall_macro": 0.8255484736995955,
+          "f1": 0.8255549026995259,
+          "predict_time_s": 0.013738500070758164
+        },
+        "test_metrics": {
+          "accuracy": 0.8190985176968841,
+          "precision_macro": 0.8191489738232164,
+          "recall_macro": 0.8190734260187957,
+          "f1": 0.8190812089144445,
+          "predict_time_s": 0.0036825999850407243
+        },
+        "n_features": 384,
+        "train_time_s": 13.517922599916346
+      }
+    },
+    "bow": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 10
+        },
+        "train_metrics": {
+          "accuracy": 0.9729988654985504,
+          "precision_macro": 0.9730121198732269,
+          "recall_macro": 0.9729911921185613,
+          "f1": 0.9729979889054008,
+          "predict_time_s": 0.03669750003609806
+        },
+        "test_metrics": {
+          "accuracy": 0.8970454774629424,
+          "precision_macro": 0.8971133306287742,
+          "recall_macro": 0.8970218470551581,
+          "f1": 0.8970358287815088,
+          "predict_time_s": 0.06280569999944419
+        },
+        "n_features": 118612,
+        "train_time_s": 2057.1779583999887
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 0.01,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.9715114080423547,
+          "precision_macro": 0.9715294875004012,
+          "recall_macro": 0.9715021036706198,
+          "f1": 0.9715103387784294,
+          "predict_time_s": 0.03297149995341897
+        },
+        "test_metrics": {
+          "accuracy": 0.8970454774629424,
+          "precision_macro": 0.8971515152994672,
+          "recall_macro": 0.8970158274621965,
+          "f1": 0.8970323440909684,
+          "predict_time_s": 0.010152900009416044
+        },
+        "n_features": 118612,
+        "train_time_s": 548.1767039999831
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 10,
+          "solver": "auto"
+        },
+        "train_metrics": {
+          "accuracy": 0.9916551115593092,
+          "precision_macro": 0.9916590330007817,
+          "recall_macro": 0.9916520579170722,
+          "f1": 0.9916549397053382,
+          "predict_time_s": 0.03294609999284148
+        },
+        "test_metrics": {
+          "accuracy": 0.8610466875063023,
+          "precision_macro": 0.8610866151661969,
+          "recall_macro": 0.8610266944544094,
+          "f1": 0.8610364786277895,
+          "predict_time_s": 0.008844399941153824
+        },
+        "n_features": 118612,
+        "train_time_s": 1675.451305900002
+      }
+    },
+    "custom_bow": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 100
+        },
+        "train_metrics": {
+          "accuracy": 0.9738560443716122,
+          "precision_macro": 0.9738639841624072,
+          "recall_macro": 0.9738504666193701,
+          "f1": 0.9738553528142595,
+          "predict_time_s": 0.01561599993146956
+        },
+        "test_metrics": {
+          "accuracy": 0.8975496621962287,
+          "precision_macro": 0.8975997710522687,
+          "recall_macro": 0.8975294248278924,
+          "f1": 0.8975417767786069,
+          "predict_time_s": 0.08944010001141578
+        },
+        "n_features": 118627,
+        "train_time_s": 2124.8238981000613
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 0.01,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.9714105634690533,
+          "precision_macro": 0.9714229305281594,
+          "recall_macro": 0.9714031517942174,
+          "f1": 0.971409659790174,
+          "predict_time_s": 0.02100760000757873
+        },
+        "test_metrics": {
+          "accuracy": 0.8977513360895432,
+          "precision_macro": 0.8978350811661484,
+          "recall_macro": 0.8977250819356082,
+          "f1": 0.8977403050023857,
+          "predict_time_s": 0.007771300035528839
+        },
+        "n_features": 118627,
+        "train_time_s": 630.0634961000178
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 10,
+          "solver": "auto"
+        },
+        "train_metrics": {
+          "accuracy": 0.9887810412202194,
+          "precision_macro": 0.9887859311177529,
+          "recall_macro": 0.9887773787854387,
+          "f1": 0.9887807945179903,
+          "predict_time_s": 0.0152204999467358
+        },
+        "test_metrics": {
+          "accuracy": 0.8655843501058788,
+          "precision_macro": 0.865611882416992,
+          "recall_macro": 0.8655678062406911,
+          "f1": 0.8655764552918981,
+          "predict_time_s": 0.009623400052078068
+        },
+        "n_features": 118627,
+        "train_time_s": 2228.537452300079
+      }
+    },
+    "custom_tfidf": {
+      "Logistic Regression": {
+        "best_params": {
+          "C": 100
+        },
+        "train_metrics": {
+          "accuracy": 0.9893861086600277,
+          "precision_macro": 0.9893890036950137,
+          "recall_macro": 0.9893835912354327,
+          "f1": 0.9893859044079072,
+          "predict_time_s": 0.02099160000216216
+        },
+        "test_metrics": {
+          "accuracy": 0.9113643238882727,
+          "precision_macro": 0.9113818450633346,
+          "recall_macro": 0.9113529319891744,
+          "f1": 0.9113606321919289,
+          "predict_time_s": 0.25867750006727874
+        },
+        "n_features": 40015,
+        "train_time_s": 1748.99423880002
+      },
+      "Linear SVM": {
+        "best_params": {
+          "C": 1,
+          "loss": "hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.9735030883650574,
+          "precision_macro": 0.9735242083867759,
+          "recall_macro": 0.9734929597443376,
+          "f1": 0.9735020188203287,
+          "predict_time_s": 0.025597100029699504
+        },
+        "test_metrics": {
+          "accuracy": 0.9101542805283857,
+          "precision_macro": 0.9102049022043053,
+          "recall_macro": 0.9101345948447881,
+          "f1": 0.9101475233353095,
+          "predict_time_s": 0.0077393000246956944
+        },
+        "n_features": 40015,
+        "train_time_s": 487.89176769996993
+      },
+      "RidgeClassifier": {
+        "best_params": {
+          "alpha": 1,
+          "solver": "lsqr"
+        },
+        "train_metrics": {
+          "accuracy": 0.9851254254380436,
+          "precision_macro": 0.9851457913751471,
+          "recall_macro": 0.9851159343523557,
+          "f1": 0.9851248486179462,
+          "predict_time_s": 0.02134249999653548
+        },
+        "test_metrics": {
+          "accuracy": 0.9066249873953817,
+          "precision_macro": 0.9068272032771337,
+          "recall_macro": 0.9065845602321285,
+          "f1": 0.9066061076525384,
+          "predict_time_s": 0.05321009992621839
+        },
+        "n_features": 40015,
+        "train_time_s": 141.55882949999068
+      }
+    }
+  },
+  "mcnemar": {
+    "rep_a": "custom_tfidf",
+    "rep_b": "tfidf",
+    "b": 179,
+    "c": 156,
+    "n": 335,
+    "method": "chi2",
+    "chi2": 1.4447761194029851,
+    "p_value": 0.22936802151414667
+  }
+}
