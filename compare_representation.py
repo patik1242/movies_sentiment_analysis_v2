@@ -11,7 +11,7 @@ from preprocess import preprocess_for_vector
 from preparation import training_data
 from train_model import train_model, train_with_grid_and_custom_features
 from feature_importance import evaluate_feature_importance, mcnemar
-from json_files import save_results_to_json, save_best_model
+from json_files import save_results_to_json
 
 
 def comparing_representations(clean_training):
