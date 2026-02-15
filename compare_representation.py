@@ -91,7 +91,6 @@ def comparing_representations(clean_training):
    
     best_f1 = -1
     best_model_name = None
-    best_estimator = None
     best_rep = None
     best_f1_per_rep = {}
 
@@ -101,7 +100,6 @@ def comparing_representations(clean_training):
 
             if f1 > best_f1:
                 best_f1 = f1
-                best_estimator = results["estimator"]
                 best_rep = representation
                 best_model_name = model
             
@@ -141,14 +139,8 @@ def comparing_representations(clean_training):
     mcnemar_results = mcnemar(preds[first_rep], preds[second_rep], y_test)
 
     save_results_to_json(all_results_imdb, best_f1_per_rep, best_model_info, second_rep, mcnemar_results)
-    save_best_model(
-        best_estimator= best_estimator, 
-        best_rep = best_rep, 
-        best_model_name = best_model_name, 
-        vectorizer = None, 
-        scaler = scaler if "custom" in best_rep else None
-    )
-    
+
+   
     plt.figure(figsize=(12,6))
 
     df_plot = pd.DataFrame.from_dict(best_f1_per_rep, orient = "index", columns =["F1"])

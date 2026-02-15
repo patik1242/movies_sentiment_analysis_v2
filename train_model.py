@@ -24,24 +24,24 @@ def train_model(X_train, X_test, y_train, y_test, vectorizer_type = "tfidf", tex
 
     param_grid = [
         {
-            "vec__ngram_range": [(1,2), (1,3)], 
-            "vec__min_df": [2,3,5], 
+            "vec__ngram_range": [(1,2)], 
+            "vec__min_df": [2, 5], 
             "vec__max_df": [0.9, 0.95], 
-            "vec__max_features": [80000, 120000], 
-            "kbest__k": [40000, 60000, 80000], 
+            "vec__max_features": [120000], 
+            "kbest__k": [40000, "all"], 
             "clf__loss": ["hinge"], 
             "clf__dual": [True], 
-            "clf__C": [0.1, 0.5, 1, 2, 5]
+            "clf__C": [0.1, 0.5, 1, 5]
         }, 
         {
-            "vec__ngram_range": [(1,2), (1,3)], 
-            "vec__min_df": [2,3,5], 
+            "vec__ngram_range": [(1,2)], 
+            "vec__min_df": [2,5], 
             "vec__max_df": [0.9, 0.95], 
-            "vec__max_features": [80000, 120000], 
-            "kbest__k": [40000, 60000, 80000], 
+            "vec__max_features": [120000], 
+            "kbest__k": [40000, "all"], 
             "clf__loss": ["squared_hinge"], 
-            "clf__dual": [True, False], 
-            "clf__C": [0.1, 0.5, 1, 2, 5]
+            "clf__dual": [False], 
+            "clf__C": [0.1, 0.5, 1, 5]
         }, 
     ]
     
@@ -65,14 +65,14 @@ def train_with_grid_and_custom_features(X_train, X_test, y_train, y_test, texts_
 
     param_grid = [
         {   
-            "C": [0.1, 0.5, 1, 2, 5],
+            "C": [0.1, 0.5, 1, 5],
             "loss": ["hinge"],
             "dual": [True],
         },
         {   
-            "C": [0.1, 0.5, 1, 2, 5],
+            "C": [0.1, 0.5, 1, 5],
             "loss": ["squared_hinge"],
-            "dual": [False, True],
+            "dual": [False],
         },
     ]
 

@@ -33,7 +33,7 @@ def load_and_clean_data():
     print("Missing values: ", training_dataset["sentiment"].isna().sum())
     print("Empty strings: ",(training_dataset["sentiment"]=="").sum()) 
     print("Balance of classes: ",training_dataset["sentiment"].value_counts())
-    print("Balance of classes (%): ",(training_dataset["sentiment"].value_counts(normalize=True)).mul(100).round(2))
+    print("Balance of classes (%)", training_dataset["sentiment"].value_counts(normalize=True)*100, "%")
 
 
 
@@ -64,7 +64,7 @@ def load_and_clean_data():
 
     print('\n==SENTIMENT ANALYSIS==')
     print("Balance of classes: ",clean_training["sentiment"].value_counts())
-    print("Balance of classes (%): ",(clean_training["sentiment"].value_counts(normalize=True)).mul(100).round(2))
+    print("Balance of classes (%)", training_dataset["sentiment"].value_counts(normalize=True)*100, "%")
     print("Number of NaN values: ",clean_training["sentiment"].isna().sum())
 
     return clean_training
