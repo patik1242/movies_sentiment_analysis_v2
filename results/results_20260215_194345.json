@@ -1,0 +1,142 @@
+{
+  "timestamp": "20260215_194345",
+  "best_model": {
+    "name": "Linear SVM",
+    "representation": "tfidf",
+    "f1_score": 0.9147798827045173
+  },
+  "best_f1_per_representation": {
+    "custom": 0.7452912355581234,
+    "tfidf": 0.9147798827045173,
+    "embedder": 0.8214098573198232,
+    "bow": 0.8966397082259283
+  },
+  "all_models": {
+    "custom": {
+      "Linear SVM": {
+        "best_params": {
+          "C": 0.1,
+          "dual": false,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.7423169040715997,
+          "precision_macro": 0.7425154949066903,
+          "recall_macro": 0.742258811907397,
+          "f1": 0.7422310239082952,
+          "predict_time_s": 0.0016274999361485243
+        },
+        "test_metrics": {
+          "accuracy": 0.7453867096904305,
+          "precision_macro": 0.7456221580983051,
+          "recall_macro": 0.7453248505880085,
+          "f1": 0.7452912355581234,
+          "predict_time_s": 0.0005691000260412693
+        },
+        "n_features": 15,
+        "train_time_s": 42.9624737999402
+      }
+    },
+    "tfidf": {
+      "Linear SVM": {
+        "best_params": {
+          "clf__C": 0.5,
+          "clf__dual": false,
+          "clf__loss": "squared_hinge",
+          "kbest__k": "all",
+          "vec__max_df": 0.9,
+          "vec__max_features": 120000,
+          "vec__min_df": 2,
+          "vec__ngram_range": [
+            1,
+            2
+          ]
+        },
+        "train_metrics": {
+          "accuracy": 0.9932434135888063,
+          "precision_macro": 0.9932502106919605,
+          "recall_macro": 0.9932389617694544,
+          "f1": 0.993243250286568,
+          "predict_time_s": 12.47275770001579
+        },
+        "test_metrics": {
+          "accuracy": 0.9147927800746194,
+          "precision_macro": 0.9149346252707417,
+          "recall_macro": 0.9147596148762038,
+          "f1": 0.9147798827045173,
+          "predict_time_s": 3.282007599947974
+        },
+        "n_features": "all",
+        "train_time_s": 2420.198227600078
+      }
+    },
+    "embedder": {
+      "Linear SVM": {
+        "best_params": {
+          "C": 1,
+          "dual": false,
+          "loss": "squared_hinge"
+        },
+        "train_metrics": {
+          "accuracy": 0.827101979074751,
+          "precision_macro": 0.8271188952212635,
+          "recall_macro": 0.827086659261751,
+          "f1": 0.8270930524506572,
+          "predict_time_s": 1.0472737000091001
+        },
+        "test_metrics": {
+          "accuracy": 0.8214177674700011,
+          "precision_macro": 0.8214293936667162,
+          "recall_macro": 0.8214043710379486,
+          "f1": 0.8214098573198232,
+          "predict_time_s": 0.15989070001523942
+        },
+        "n_features": 384,
+        "train_time_s": 91.39420980005525
+      }
+    },
+    "bow": {
+      "Linear SVM": {
+        "best_params": {
+          "clf__C": 0.1,
+          "clf__dual": false,
+          "clf__loss": "squared_hinge",
+          "kbest__k": "all",
+          "vec__max_df": 0.95,
+          "vec__max_features": 120000,
+          "vec__min_df": 2,
+          "vec__ngram_range": [
+            1,
+            2
+          ]
+        },
+        "train_metrics": {
+          "accuracy": 1.0,
+          "precision_macro": 1.0,
+          "recall_macro": 1.0,
+          "f1": 1.0,
+          "predict_time_s": 12.56320519989822
+        },
+        "test_metrics": {
+          "accuracy": 0.8966421296763134,
+          "precision_macro": 0.8966450705064035,
+          "recall_macro": 0.8966365524326884,
+          "f1": 0.8966397082259283,
+          "predict_time_s": 3.227372599998489
+        },
+        "n_features": "all",
+        "train_time_s": 11569.543597399956
+      }
+    }
+  },
+  "mcnemar": {
+    "rep_a": "tfidf",
+    "rep_b": "bow",
+    "b": 323,
+    "c": 143,
+    "n": 466,
+    "method": "chi2",
+    "chi2": 68.75751072961373,
+    "p_value": 1.1134599893696534e-16
+  }
+}
