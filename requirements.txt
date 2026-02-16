@@ -4,7 +4,6 @@ scikit-learn
 scipy
 matplotlib
 sentence-transformers
-xgboost
 vaderSentiment
 flask
 nltk
